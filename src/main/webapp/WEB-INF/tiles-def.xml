@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	<definition name="base.definition" template="/WEB-INF/layouts/layout.jsp">
+		<put-attribute name="title" value="FourT - Resource Task Tracker" />
+		<put-attribute name="metaTags" value="/WEB-INF/layouts/metaTags.jsp" />
+		<put-attribute name="siteHeaderInclude" value="/WEB-INF/jsp/includes/headerinclude.jsp"/>
+		<put-attribute name="sidebar" value="/WEB-INF/jsp/sidebarMenu.jsp"/>
+		<put-attribute name="body" value="/WEB-INF/layouts/blank.jsp" />
+		<put-attribute name="siteFooterInclude" value="/WEB-INF/jsp/includes/footerinclude.jsp" />
+	</definition>
+	
+	<definition name="landingPage" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
+	</definition>
+	
+	<definition name="resource/task/failure" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
+	</definition>
+	
+	<definition name="resource/task/success" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
+	</definition>
+	
+	<!-- Error page views start -->
+	
+	<definition name="generic/error" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/jsp/errors/errorPage.jsp" />
+	</definition>
+	
+	<!-- Error page views end -->
+</tiles-definitions>
