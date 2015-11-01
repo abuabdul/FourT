@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.2.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+	<!-- Scans fourt whole package for annotated classes -->					
+	<context:component-scan base-package="com.abuabdul.fourt" />
+	
+	<!-- This is needed if you want to use the @Transactional annotation -->
+	<tx:annotation-driven />
+	
+	<!-- To handle mvc annotations -->
+	<mvc:annotation-driven />
+	
+	<!-- To handle static resources. It needs DispatcherServlet to be mapped to '/'  -->
+	<mvc:resources mapping="/resources/**" location="/WEB-INF/static-content/" cache-period="10000" />
+	
+	<!-- Spring MVC global exception handling -->
+	<bean class="com.abuabdul.fourt.exception.resolver.FourTExceptionResolver">
+	    <property name="exceptionMappings">
+	        <props>
+	        <!-- Map apt error views -->
+	            <prop key="FourTException">generic/error</prop>
+	        </props>
+	    </property>
+	    <property name="defaultErrorView" value="generic/error" />
+	    <property name="preventResponseCaching" value="true" />
+	</bean>
+	
+	<!-- Last view resolver to be invoked by default -->
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!--  cache rather very low -->
+        <property name="cacheSeconds">
+            <value>1</value>
+        </property>
+        <property name="basenames">
+            <list>
+                <value>WEB-INF/locale/messages</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
