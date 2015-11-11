@@ -1,1 +1,16 @@
 language: java
+
+script: mvn clean install
+
+jdk:
+  - oraclejdk7
+
+os:
+  - linux
+
+branches:
+  only:
+     - master
+
+notifications:
+  email: false
