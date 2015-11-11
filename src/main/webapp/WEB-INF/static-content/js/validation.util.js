@@ -98,8 +98,8 @@ var FOURT = window.FOURT || {};
             	var $row  = $(this).parent().parent().parent(),
             		index = $row.attr('data-task-index');
 
-	            // Remove fields
-            	bootstrapValidatorObj('#resourceTaskTrackerForm').removeField($row.find('[name="taskDetailList[' + index + '].taskDesc"]'))
+	             // Remove fields
+            	 bootstrapValidatorObj('#resourceTaskTrackerForm').removeField($row.find('[name="taskDetailList[' + index + '].taskDesc"]'))
             	 												 .removeField($row.find('[name="taskDetailList[' + index + '].duration"]'))
             	 												 .removeField($row.find('[name="taskDetailList[' + index + '].status"]'));
 	             $row.remove();
