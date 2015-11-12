@@ -47,6 +47,14 @@ var FOURT = window.FOURT || {};
                              }
                          }
             	},
+            	customTaskValidator = {
+                   		selector: '.customTaskDetails',
+                        validators: {
+                             notEmpty: {
+                                message: 'The custom query is required and cannot be empty'
+                             }
+                         }
+            	},
         		taskIndex=0;
         	
             $('#resourceTaskTrackerForm').bootstrapValidator({
@@ -77,6 +85,7 @@ var FOURT = window.FOURT || {};
                             }
                         }
                     },
+                    customTaskDetails: customTaskValidator,
                     taskDetailDesc: taskDescValidator,
                     taskDetailDuration: taskDurationValidator,
                     taskDetailStatus: taskStatusValidator

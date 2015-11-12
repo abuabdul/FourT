@@ -75,10 +75,11 @@ public class FourTLandingController {
 			BindingResult result, ModelMap model) {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
 		try {
-		//	ValidationUtils.rejectIfEmptyOrWhitespace(result, "frgtEmail", "email.required");
+			ValidationUtils.rejectIfEmptyOrWhitespace(result, "customQuery", "custom.query.required");
 
 			if (result.hasErrors()) {
-				return null;
+				model.addAttribute("customViewError",true);
+				return "customView";
 			}
 			fourTService.viewCustomTaskResults(resourceTask.getCustomQuery());
 			model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
