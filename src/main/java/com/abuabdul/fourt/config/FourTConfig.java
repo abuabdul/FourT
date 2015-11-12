@@ -64,7 +64,9 @@ public class FourTConfig {
 	@Value("${jdbc.poolMaxWaitMillis}")
 	private int maxWaitMillis;
 
-	private String url = "jdbc:hsqldb:hsql://" + host + ":" + port + "/" + taskTrackerDBName;
+	// private String url = "jdbc:hsqldb:hsql://" + host + ":" + port + "/" +
+	// taskTrackerDBName;
+	private String url = "jdbc:hsqldb:mem:" + taskTrackerDBName;
 
 	@Bean
 	public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
@@ -79,10 +81,10 @@ public class FourTConfig {
 	@Bean(destroyMethod = "close")
 	public DataSource dataSource() {
 		BasicDataSource datasource = new BasicDataSource();
-		datasource.setUsername(username);
-		datasource.setPassword(password);
 		datasource.setDriverClassName(driverClassName);
 		datasource.setUrl(url);
+		datasource.setUsername(username);
+		datasource.setPassword(password);
 		datasource.setInitialSize(initialSize);
 		datasource.setMinIdle(minIdle);
 		datasource.setMaxIdle(maxIdle);
@@ -95,14 +97,24 @@ public class FourTConfig {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
-		//entityManagerFactory.setPersistenceUnitName("fourt");
+	//	entityManagerFactory.setPersistenceUnitName("fourtunit");
+	//	entityManagerFactory.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		entityManagerFactory.setPackagesToScan(new String[] {"com.abuabdul.fourt.domain"});
+		entityManagerFactory.setPackagesToScan(new String[] { "com.abuabdul.fourt.domain" });
 		return entityManagerFactory;
 	}
 
 	@Bean
+	public JpaVendorAdapter jpaVendorAdapter() {
+		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+		jpaVendorAdapter.setDatabase(Database.HSQL);
+		jpaVendorAdapter.setShowSql(true);
+		jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
+		return jpaVendorAdapter;
+	}
+
+	@Bean(name = "transactionManager")
 	public PlatformTransactionManager jpaTransactionManager() {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
@@ -110,16 +122,10 @@ public class FourTConfig {
 	}
 
 	@Bean
-	public JpaVendorAdapter jpaVendorAdapter() {
-		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-		jpaVendorAdapter.setDatabase(Database.HSQL);
-		jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
-		return jpaVendorAdapter;
-	}
-
-	@Bean
 	public EmbeddedDatabase embeddedDatabase() {
-		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL).build();
+		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:sql/db/hsqldb/create_db.sql")
+				.build();
 	}
 
 	// Disable after development
@@ -129,7 +135,8 @@ public class FourTConfig {
 			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
 			methodInvokingBean.setTargetClass(DatabaseManagerSwing.class);
 			methodInvokingBean.setTargetMethod("main");
-			methodInvokingBean.setArguments(new String[] { "--url", "jdbc:hsqldb:mem:" + taskTrackerDBName, "--user", "sa", "--password", "" });
+			methodInvokingBean.setArguments(
+					new String[] { "--url", "jdbc:hsqldb:mem:" + taskTrackerDBName, "--user", "sa", "--password", "" });
 			methodInvokingBean.prepare();
 			methodInvokingBean.invoke();
 		} catch (Exception ex) {

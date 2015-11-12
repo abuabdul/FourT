@@ -4,7 +4,7 @@ package com.abuabdul.fourt.model;
  * @author abuabdul
  *
  */
-public class TaskDetail {
+public class ResourceTaskDetail {
 	
 	private String taskDesc;
 	private String duration;

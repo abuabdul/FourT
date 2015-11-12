@@ -15,32 +15,32 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "TASK_DETAIL")
+@Table(name = "TASK_DETAIL", catalog = "FOURT")
 public class TaskDetail {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	private String id;
+	private Long id;
 
 	@Column(name = "TASK_DESC", nullable = false)
 	private String taskDesc;
 
 	@Column(name = "TASK_DURATION", nullable = false)
-	private String duration;
+	private Float duration;
 
 	@Column(name = "TASK_STATUS", nullable = false)
 	private String status;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "RESOURCE_ID")
 	private Resource resource;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -52,11 +52,11 @@ public class TaskDetail {
 		this.taskDesc = taskDesc;
 	}
 
-	public String getDuration() {
+	public Float getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration) {
+	public void setDuration(Float duration) {
 		this.duration = duration;
 	}
 
@@ -75,5 +75,5 @@ public class TaskDetail {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	
+
 }

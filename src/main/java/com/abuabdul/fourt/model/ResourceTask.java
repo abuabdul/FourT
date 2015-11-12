@@ -12,7 +12,7 @@ public class ResourceTask {
 
 	private String resourceName;
 	private String taskDate;
-	private List<TaskDetail> taskDetailList = Lists.newArrayList();
+	private List<ResourceTaskDetail> taskDetailList = Lists.newArrayList();
 
 	public String getResourceName() {
 		return resourceName;
@@ -30,11 +30,11 @@ public class ResourceTask {
 		this.taskDate = taskDate;
 	}
 
-	public List<TaskDetail> getTaskDetailList() {
+	public List<ResourceTaskDetail> getTaskDetailList() {
 		return taskDetailList;
 	}
 
-	public void setTaskDetailList(List<TaskDetail> taskDetailList) {
+	public void setTaskDetailList(List<ResourceTaskDetail> taskDetailList) {
 		this.taskDetailList = taskDetailList;
 	}
 
