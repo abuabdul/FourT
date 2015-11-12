@@ -1,6 +1,6 @@
 language: java
 
-script: mvn clean install
+script: mvn clean compile
 
 jdk:
   - oraclejdk7

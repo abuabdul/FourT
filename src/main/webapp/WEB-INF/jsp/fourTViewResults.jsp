@@ -17,7 +17,7 @@
 				</div>
 				<div class="row row-border">
 					<div class="col-lg-12">
-						<h3>Resource Task Tracker Form</h3>
+						<h3>Resource Task Tracker Details</h3>
 						<div class="padding-top5px">
 						 	<c:url var="resourceTaskTrackerUrl" value="/secure/resource/taskTracker.go"/>
                             <form:form id="resourceTaskTrackerForm" class="form-horizontal" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerUrl}" method="post">

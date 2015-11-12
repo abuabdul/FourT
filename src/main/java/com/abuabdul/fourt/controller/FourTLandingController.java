@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,7 +42,8 @@ public class FourTLandingController {
 	}
 
 	@RequestMapping(value = "/secure/resource/taskTracker.go")
-	public String saveResourceTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask, BindingResult result, ModelMap model) {
+	public String saveResourceTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask,
+			BindingResult result, ModelMap model) {
 		log.debug("Entering saveResourceTaskDetails() in the FourTLandingController");
 		try {
 			Resource resource = fourTConverter.convert(resourceTask);
@@ -53,7 +55,7 @@ public class FourTLandingController {
 			throw new FourTException(fse.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/landing/fourTViewResults.go")
 	public String viewResults(ModelMap model) {
 		log.debug("Entering landingPage() in the FourTLandingController");
@@ -68,4 +70,22 @@ public class FourTLandingController {
 		return "customView";
 	}
 
+	@RequestMapping(value = "/secure/resource/viewCustomTaskDetails.go")
+	public String customViewTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask,
+			BindingResult result, ModelMap model) {
+		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
+		try {
+		//	ValidationUtils.rejectIfEmptyOrWhitespace(result, "frgtEmail", "email.required");
+
+			if (result.hasErrors()) {
+				return null;
+			}
+			fourTService.viewCustomTaskResults(resourceTask.getCustomQuery());
+			model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
+			return "customView";
+		} catch (FourTServiceException fse) {
+			fse.printStackTrace();
+			throw new FourTException(fse.getMessage());
+		}
+	}
 }
