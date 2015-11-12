@@ -129,7 +129,7 @@ public class FourTConfig {
 	}
 
 	// Disable after development
-	@PostConstruct
+	//@PostConstruct
 	public void startDBManager() throws FourTServiceException {
 		try {
 			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
