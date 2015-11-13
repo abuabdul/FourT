@@ -21,12 +21,6 @@
 				<div class="padding-top5px">
 					<c:url var="resourceTaskTrackerDetailsUrl" value="/secure/resource/viewCustomTaskDetails.go" />
 					<form:form id="resourceTaskTrackerForm" class="form-horizontal" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerDetailsUrl}" method="post">
-					    <c:if test="${customViewError}">
-					   		 <div class="alert alert-danger">
-	                            	<a href="#" class="close" data-dismiss="alert">&times;</a>
-	                              	<form:errors path="*"/>		
-	                          </div>
-                        </c:if>
 						<div class="form-group">
 							<label for="forTaskDetail" class="col-sm-4 control-label">Custom SQL Query</label>
 							<div class="col-xs-12 col-sm-8 col-md-5">

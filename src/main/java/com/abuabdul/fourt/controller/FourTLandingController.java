@@ -3,7 +3,6 @@ package com.abuabdul.fourt.controller;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -47,7 +46,8 @@ public class FourTLandingController {
 	}
 
 	@RequestMapping(value = "/secure/resource/taskTracker.go")
-	public String saveResourceTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask, ModelMap model) {
+	public String saveResourceTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask,
+			ModelMap model) {
 		log.debug("Entering saveResourceTaskDetails() in the FourTLandingController");
 		try {
 			Resource resource = fourTConverter.convert(resourceTask);
@@ -55,65 +55,70 @@ public class FourTLandingController {
 			model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
 			return "landingPage";
 		} catch (FourTServiceException fse) {
-			fse.printStackTrace();
 			throw new FourTException(fse.getMessage());
 		}
 	}
 
 	@RequestMapping(value = "/landing/fourTViewResults.go")
 	public String viewResults(ModelMap model) {
-		log.debug("Entering landingPage() in the FourTLandingController");
+		log.debug("Entering viewResults() in the FourTLandingController");
 		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
 		return "viewResults";
 	}
-
-	@RequestMapping(value = "/landing/fourTCustomView.go")
-	public String customView(ModelMap model) {
-		log.debug("Entering landingPage() in the FourTLandingController");
-		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
-		return "customView";
-	}
-
-	@RequestMapping(value = "/secure/resource/viewCustomTaskDetails.go")
-	public void customViewTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask, HttpServletResponse response) throws IOException {
-		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
-		/*
-		 * List<Object[]> resultList =
-		 * fourTService.viewCustomTaskResults(resourceTask.getCustomQuery()) ;
-		 * 
-		 * for (Object[] objects : resultList) {
-		 * 
-		 * }
-		 */
-
-		String txtFileName = "customView.txt";
+	
+	@RequestMapping(value = "/secure/resource/viewTaskDetailResults.go")
+	public void viewTaskResults(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask,
+			HttpServletResponse response) throws IOException {
+		log.debug("Entering viewTaskResults() in the FourTLandingController");
+		List<Object[]> resultList = Lists.newArrayList();
+		try {
+			resultList = fourTService.viewCustomTaskResults(resourceTask.getCustomQuery());
+		} catch (FourTServiceException fse) {
+			throw new FourTException(fse.getMessage());
+		}
+		String txtFileName = "customview.txt";
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"", txtFileName);
 		response.setContentType("text/plain");
 		response.setHeader(headerKey, headerValue);
 		response.setCharacterEncoding("UTF-8");
-
-		List<String> welcome = Lists.newArrayList();
-		welcome.add("hello");
-		welcome.add("how are you");
-
-		List<String> welcome1 = Lists.newArrayList();
-		welcome1.add("hello1");
-		welcome1.add("how are you1");
-
-		List<String> welcome2 = Lists.newArrayList();
-		welcome2.add("hello2");
-		welcome2.add("how are you2");
-
-		List<List<String>> listOfList = Lists.newArrayList();
-		listOfList.add(welcome);
-		listOfList.add(welcome1);
-		listOfList.add(welcome2);
-
-		for (List<String> list : listOfList) {
+		for (Object[] objects : resultList) {
 			String row = "";
-			for (String string : list) {
-				row = row.concat(string).concat("\t");
+			for (Object obj : objects) {
+				row = row.concat(obj.toString()).concat("\t");
+			}
+			response.getWriter().write(row);
+			response.getWriter().println();
+		}
+	}
+
+	@RequestMapping(value = "/landing/fourTCustomView.go")
+	public String customView(ModelMap model) {
+		log.debug("Entering customView() in the FourTLandingController");
+		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
+		return "customView";
+	}
+
+	@RequestMapping(value = "/secure/resource/viewCustomTaskDetails.go")
+	public void customViewTaskDetails(@ModelAttribute("resourceTaskTrackerForm") ResourceTask resourceTask,
+			HttpServletResponse response) throws IOException {
+		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
+		List<Object[]> resultList = Lists.newArrayList();
+		try {
+			resultList = fourTService.viewCustomTaskResults(resourceTask.getCustomQuery());
+		} catch (FourTServiceException fse) {
+			throw new FourTException(fse.getMessage());
+		}
+		String txtFileName = "customview.txt";
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"", txtFileName);
+		response.setContentType("text/plain");
+		response.setHeader(headerKey, headerValue);
+		response.setCharacterEncoding("UTF-8");
+		for (Object[] objects : resultList) {
+			String row = "";
+			for (Object obj : objects) {
+				row = row.concat(obj.toString()).concat("\t");
 			}
 			response.getWriter().write(row);
 			response.getWriter().println();
