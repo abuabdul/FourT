@@ -19,6 +19,12 @@
 					<div class="col-lg-12">
 						<h3>Resource Task Tracker Form</h3>
 						<div class="padding-top5px">
+						   	<c:if test="${saveTaskDetails}">
+	                            <div class="alert alert-success">
+	                               	<a href="#" class="close" data-dismiss="alert">&times;</a>
+	                               	Resource Task Details saved successfully.
+                                </div>
+                           	</c:if>
 						 	<c:url var="resourceTaskTrackerUrl" value="/secure/resource/taskTracker.go"/>
                             <form:form id="resourceTaskTrackerForm" class="form-horizontal" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerUrl}" method="post">
 								<div class="form-group">

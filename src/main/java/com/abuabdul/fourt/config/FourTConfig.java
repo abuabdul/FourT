@@ -1,9 +1,12 @@
 package com.abuabdul.fourt.config;
 
+import java.util.Properties;
+
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hsqldb.util.DatabaseManagerSwing;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -17,7 +20,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -64,25 +66,45 @@ public class FourTConfig {
 	@Value("${jdbc.poolMaxWaitMillis}")
 	private int maxWaitMillis;
 
-	// private String url = "jdbc:hsqldb:hsql://" + host + ":" + port + "/" +
-	// taskTrackerDBName;
-	private String url = "jdbc:hsqldb:mem:" + taskTrackerDBName;
+	private static final String APPCONFIG_FILE_NAME = "Appconfig.properties";
 
 	@Bean
 	public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
 		PropertyPlaceholderConfigurer propertyConfigurer = new PropertyPlaceholderConfigurer();
-		propertyConfigurer.setLocation(new ClassPathResource("Appconfig.properties"));
+		propertyConfigurer.setLocation(new ClassPathResource(APPCONFIG_FILE_NAME));
 		propertyConfigurer.setIgnoreResourceNotFound(false);
 		propertyConfigurer.setIgnoreUnresolvablePlaceholders(false);
 		propertyConfigurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 		return propertyConfigurer;
 	}
 
+	@Bean(name = "embeddedDatabase")
+	public EmbeddedDatabase embeddedDatabase() {
+		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:sql/db/hsqldb/create_db.sql").build();
+	}
+
+	// Disable after development
+	@PostConstruct
+	public void startDBManager() throws FourTServiceException {
+		try {
+			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
+			methodInvokingBean.setTargetClass(DatabaseManagerSwing.class);
+			methodInvokingBean.setTargetMethod("main");
+			methodInvokingBean.setArguments(
+					new String[] { "--url", getInMemoryHSQLDBUrl(), "--user", username, "--password", password });
+			methodInvokingBean.prepare();
+			methodInvokingBean.invoke();
+		} catch (Exception ex) {
+			throw new FourTServiceException(ex.getMessage(), ex);
+		}
+	}
+
 	@Bean(destroyMethod = "close")
 	public DataSource dataSource() {
 		BasicDataSource datasource = new BasicDataSource();
 		datasource.setDriverClassName(driverClassName);
-		datasource.setUrl(url);
+		datasource.setUrl(getInMemoryHSQLDBUrl());
 		datasource.setUsername(username);
 		datasource.setPassword(password);
 		datasource.setInitialSize(initialSize);
@@ -97,21 +119,41 @@ public class FourTConfig {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
-	//	entityManagerFactory.setPersistenceUnitName("fourtunit");
-	//	entityManagerFactory.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
+
+		/*
+		 * If JpaVendorAdapter is set, persistence xml is not needed
+		 * 
+		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
+		 * entityManagerFactory.setPersistenceXmlLocation(
+		 * "classpath:META-INF/persistence.xml");
+		 * 
+		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
+		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		entityManagerFactory.setPackagesToScan(new String[] { "com.abuabdul.fourt.domain" });
+		//Need to specify when entity class is not specified in persistence.xml
+		entityManagerFactory.setPackagesToScan("com.abuabdul.fourt.domain");
 		return entityManagerFactory;
 	}
 
 	@Bean
 	public JpaVendorAdapter jpaVendorAdapter() {
-		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-		jpaVendorAdapter.setDatabase(Database.HSQL);
-		jpaVendorAdapter.setShowSql(true);
-		jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
-		return jpaVendorAdapter;
+		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+		hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
+		hibernateJpaVendorAdapter.setGenerateDdl(false);
+		return hibernateJpaVendorAdapter;
+	}
+
+	// NOT needed
+	public Properties jpaProperties() {
+		Properties prop = new Properties();
+		/*
+		 * prop.put("javax.persistence.jdbc.url", url);
+		 * prop.put("javax.persistence.jdbc.user", "sa");
+		 * prop.put("javax.persistence.jdbc.password", "");
+		 * prop.put("javax.persistence.jdbc.driver", driverClassName);
+		 */
+		return prop;
 	}
 
 	@Bean(name = "transactionManager")
@@ -121,27 +163,12 @@ public class FourTConfig {
 		return jpaTransactionManager;
 	}
 
-	@Bean
-	public EmbeddedDatabase embeddedDatabase() {
-		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL)
-				.addScript("classpath:sql/db/hsqldb/create_db.sql")
-				.build();
+	protected String getInMemoryHSQLDBUrl() {
+		return new StringBuilder("jdbc:hsqldb:mem:").append(taskTrackerDBName).toString();
 	}
 
-	// Disable after development
-	//@PostConstruct
-	public void startDBManager() throws FourTServiceException {
-		try {
-			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
-			methodInvokingBean.setTargetClass(DatabaseManagerSwing.class);
-			methodInvokingBean.setTargetMethod("main");
-			methodInvokingBean.setArguments(
-					new String[] { "--url", "jdbc:hsqldb:mem:" + taskTrackerDBName, "--user", "sa", "--password", "" });
-			methodInvokingBean.prepare();
-			methodInvokingBean.invoke();
-		} catch (Exception ex) {
-			throw new FourTServiceException(ex.getMessage(), ex);
-		}
+	protected String getStandaloneHSQLDBUrl() {
+		return new StringBuilder("jdbc:hsqldb:hsql://").append(host).append(":").append(port).append("/")
+				.append(taskTrackerDBName).toString();
 	}
-
 }

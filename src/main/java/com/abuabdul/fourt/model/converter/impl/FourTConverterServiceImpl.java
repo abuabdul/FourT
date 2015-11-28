@@ -1,6 +1,5 @@
 package com.abuabdul.fourt.model.converter.impl;
 
-import static com.abuabdul.fourt.util.FourTUtils.getHyphensInDateFormat;
 import static com.abuabdul.fourt.util.FourTUtils.getUTCDateTime;
 import static com.abuabdul.fourt.util.FourTUtils.simpleDateWithDDMMYYYY;
 
@@ -27,9 +26,8 @@ public class FourTConverterServiceImpl implements FourTConverter<ResourceTask, R
 	public Resource convert(ResourceTask resourceTask) throws FourTException {
 		Resource resource = new Resource();
 		if (resourceTask != null) {
-			//resource.setId(new Double(Math.random()).longValue());
 			resource.setName(resourceTask.getResourceName());
-			resource.setTaskDate(getUTCDateTime());//simpleDateWithDDMMYYYY(getHyphensInDateFormat(resourceTask.getTaskDate())));
+			resource.setTaskDate(simpleDateWithDDMMYYYY(resourceTask.getTaskDate()));
 			resource.setCreatedBy(resourceTask.getResourceName());
 			resource.setCreatedDate(getUTCDateTime());
 			resource.setUpdatedBy(resourceTask.getResourceName());
@@ -37,7 +35,6 @@ public class FourTConverterServiceImpl implements FourTConverter<ResourceTask, R
 			List<TaskDetail> taskDetailList = Lists.newArrayList();
 			for (ResourceTaskDetail restaskDetail : resourceTask.getTaskDetailList()) {
 				TaskDetail taskDetail = new TaskDetail();
-				//taskDetail.setId(new Double(Math.random()).longValue());
 				taskDetail.setResource(resource);
 				taskDetail.setDuration(Float.valueOf(restaskDetail.getDuration()));
 				taskDetail.setStatus(restaskDetail.getStatus());

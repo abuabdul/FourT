@@ -18,11 +18,11 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "RESOURCE", catalog = "FOURT")
+@Table(name = "RESOURCE")
 public class Resource {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID")
 	private Long id;
 

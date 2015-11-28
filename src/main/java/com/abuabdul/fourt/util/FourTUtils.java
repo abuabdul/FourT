@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -19,11 +18,11 @@ import com.abuabdul.fourt.exception.FourTException;
  */
 public class FourTUtils {
 
-	private static final DateFormat dd_MM_YYYY = new SimpleDateFormat("DD-MM-YYYY");
+	private static final DateFormat dd_MM_YYYY = new SimpleDateFormat("dd/MM/yyyy");
 
 	public static String simpleDateStringWithDDMMYYYY(Date date) {
 		if (date != null) {
-			return getForwardSlashInDateFormat(dd_MM_YYYY.format(date));
+			return dd_MM_YYYY.format(date);
 		}
 		return null;
 	}
@@ -43,11 +42,4 @@ public class FourTUtils {
 		return new DateTime(DateTimeZone.UTC).toDate();
 	}
 
-	public static String getHyphensInDateFormat(String dateStr) {
-		return StringUtils.replaceChars(dateStr, "/", "-");
-	}
-
-	public static String getForwardSlashInDateFormat(String dateStr) {
-		return StringUtils.replaceChars(dateStr, "-", "/");
-	}
 }
