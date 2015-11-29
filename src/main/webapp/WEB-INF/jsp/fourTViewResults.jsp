@@ -18,7 +18,7 @@
 				<div class="row row-border">
 					<div class="col-lg-12">
 						<h3>Resource Task Details</h3>
-						<div class="padding-top5px padding-bottom5px">
+						<div>
 						 	<c:url var="resourceTaskTrackerViewUrl" value="/secure/resource/viewTaskDetailResults.go"/>
                             <form:form id="resourceTaskTrackerViewForm" class="form-inline" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerViewUrl}" method="post">
 								<div class="form-group">
@@ -58,7 +58,7 @@
 								</div>
 							</form:form>
 						</div>
-						<div class="table-responsive padding-10px">
+						<div class="table-responsive padding-3px">
 						    <div class="page-header">
   								<h2><small>Results based on above filters:</small></h2>
 							</div>

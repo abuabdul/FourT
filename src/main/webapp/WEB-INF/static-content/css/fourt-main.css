@@ -11,22 +11,10 @@
 	padding-top: 5px;
 }
 
-.padding-bottom5px {
-	padding-bottom: 5px;
-}
-
-.padding-5px {
-	padding: 5px;
-}
-
-.padding-10px {
-	padding: 10px;
+.padding-3px {
+	padding: 3px;
 }
 
 .glyphicon.bigger {
 	font-size: 25px;
-}
-
-@-moz-document url-prefix() {
-  fieldset { display: table-cell; }
 }
