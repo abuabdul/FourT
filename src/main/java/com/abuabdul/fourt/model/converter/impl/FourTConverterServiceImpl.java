@@ -16,6 +16,9 @@ import com.abuabdul.fourt.model.converter.FourTConverter;
 import com.google.common.collect.Lists;
 
 /**
+ * 
+ * Converter that converts Resource Task Details to Resource entity
+ * 
  * @author abuabdul
  *
  */

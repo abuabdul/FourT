@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/jsp/includes/siteTags.jsp"%>
 		<!-- Page Content -->
 		<div id="page-content-wrapper">
-
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-lg-12">
@@ -18,9 +17,9 @@
 				<div class="row row-border">
 					<div class="col-lg-12">
 						<h3>Resource Task Details</h3>
-						<div>
+						<div class="padding-bottom5px">
 						 	<c:url var="resourceTaskTrackerViewUrl" value="/secure/resource/viewTaskDetailResults.go"/>
-                            <form:form id="resourceTaskTrackerViewForm" class="form-inline" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerViewUrl}" method="post">
+                            <form:form id="resourceTaskTrackerViewForm" class="form-inline" role="form" modelAttribute="resourceTaskDetailForm" action="${resourceTaskTrackerViewUrl}" method="post">
 								<div class="form-group">
                                     <div class="col-xs-12 col-sm-8 col-md-5">
                                         <form:select class="form-control" path="resourceName">
@@ -38,12 +37,12 @@
                                  </div>
                                  <div class="form-group">
                                     <div class="col-xs-12 col-sm-8 col-md-5">
-                                        <form:input type="text" class="form-control" path="taskDetailList[0].duration" placeholder="Task Duration(Hours)"/>
+                                        <form:input type="text" class="form-control" path="duration" placeholder="Task Duration(Hours)"/>
                                     </div>   
                                  </div>
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-8 col-md-5">
-                                        <form:select class="form-control" path="taskDetailList[0].status">
+                                        <form:select class="form-control" path="status">
 	                                         <form:option value="">Task Status</form:option>
 	                                         <form:option value="In Analysis">In Analysis</form:option>
 	                                         <form:option value="In Progress">In Progress</form:option>
@@ -58,40 +57,54 @@
 								</div>
 							</form:form>
 						</div>
-						<div class="table-responsive padding-3px">
-						    <div class="page-header">
-  								<h2><small>Results based on above filters:</small></h2>
+						<c:if test="${(empty resourceTaskDetails) and (not viewTasksLanding)}">
+							<div class="table-responsive padding-3px">
+							    <div class="page-header">
+	  								<h2><small>No Results</small></h2>
+								</div>
 							</div>
-							<table id="tasktracker" class="table table-striped table-bordered">
-								   <thead>
-								 		<tr>
-											<th>Task Date</th>
-											<th>Name</th>
-											<th>Task</th>
-											<th>Duration</th>
-											<th>Status</th>
-										</tr>
-									</thead>
-									<tfoot>
-								 		<tr>
-											<th>Task Date</th>
-											<th>Name</th>
-											<th>Task</th>
-											<th>Duration</th>
-											<th>Status</th>
-										</tr>
-									</tfoot>
-									<tbody>
-										<tr>
-											<td>Tiger Nixon</td>
-											<td>System Architect</td>
-											<td>Edinburgh Edinburgh Edinburgh Edinburgh</td>
-											<td>61</td>
-											<td>2011/04/25</td>
-										</tr>
-									</tbody>
-							</table>
-					  </div>
+						</c:if>			
+						<c:if test="${not empty resourceTaskDetails}">
+							<div class="table-responsive padding-3px">
+							    <div class="page-header">
+	  								<h2><small>Results based on above filters:</small></h2>
+								</div>
+								<table id="tasktracker" class="table table-striped table-bordered">
+									   <thead>
+									 		<tr>
+									 		    <th>#</th>
+												<th>Task Date</th>
+												<th>Name</th>
+												<th>Task Description</th>
+												<th>Duration(Hrs)</th>
+												<th>Status</th>
+											</tr>
+										</thead>
+										<tfoot>
+									 		<tr>
+									 		    <th>#</th>
+												<th>Task Date</th>
+												<th>Name</th>
+												<th>Task Description</th>
+												<th>Duration(Hrs)</th>
+												<th>Status</th>
+											</tr>
+										</tfoot>
+										<tbody>
+										    <c:forEach items="${resourceTaskDetails}" var="viewTaskDtl">
+												<tr>
+												    <td></td>
+												    <td>${viewTaskDtl.taskDate}</td>
+												    <td>${viewTaskDtl.resourceName}</td>
+												    <td>${viewTaskDtl.taskDesc}</td>
+												    <td>${viewTaskDtl.duration}</td>
+												    <td>${viewTaskDtl.status}</td>
+												</tr>
+											</c:forEach>
+										</tbody>
+								</table>
+						  </div>
+					  </c:if>  
 				 </div>
 			 </div>
 		 </div>

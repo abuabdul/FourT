@@ -24,6 +24,11 @@ public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements
 	public void saveResource(Resource resource) throws FourTServiceException {
 		save(resource);
 	}
+	
+	@Override
+	public List<Resource> findAllResources() throws FourTServiceException {
+		return listAll();
+	}
 
 	@Override
 	public List<Resource> findResourceByName(String resourceName) throws FourTServiceException {

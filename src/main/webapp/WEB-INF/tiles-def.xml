@@ -17,7 +17,7 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
 	</definition>
 	
-	<definition name="viewResults" extends="base.definition">
+	<definition name="viewTasks" extends="base.definition">
 		<put-attribute name="body" value="/WEB-INF/jsp/fourTViewResults.jsp" />
 	</definition>
 	

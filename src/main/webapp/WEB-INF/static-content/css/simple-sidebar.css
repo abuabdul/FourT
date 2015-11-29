@@ -96,6 +96,22 @@
     background: none;
 }
 
+/* DB Manager Tool */
+.sidebar-nav > .sidebar-db-tool {
+    height: 40px;
+    font-size: 17px;
+    line-height: 40px;
+}
+
+.sidebar-nav > .sidebar-db-tool a {
+    color: #ccc;
+}
+
+.sidebar-nav > .sidebar-db-tool a:hover {
+    color: #ff0;
+    background: none;
+}
+
 @media(min-width:768px) {
     #wrapper {
         padding-left: 250px;

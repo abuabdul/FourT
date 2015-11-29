@@ -29,6 +29,11 @@ public class FourTServiceImpl implements FourTService {
 	}
 
 	@Override
+	public List<Resource> findAllResourceTaskDetails() throws FourTServiceException {
+		return fourTResourceDAO.findAllResources();
+	}
+
+	@Override
 	public List<Resource> findResourceByName(String resourceName) throws FourTServiceException {
 		return fourTResourceDAO.findResourceByName(resourceName);
 	}
@@ -62,5 +67,4 @@ public class FourTServiceImpl implements FourTService {
 	public List<Object[]> viewCustomTaskResults(String nativeQuery) throws FourTServiceException {
 		return fourTResourceDAO.findCustomTaskResults(nativeQuery);
 	}
-
 }

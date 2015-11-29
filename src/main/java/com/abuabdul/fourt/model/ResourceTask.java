@@ -14,9 +14,6 @@ public class ResourceTask {
 	private String taskDate;
 	private List<ResourceTaskDetail> taskDetailList = Lists.newArrayList();
 	
-	//Custom View Query Textbox
-	private String customQuery;
-
 	public String getResourceName() {
 		return resourceName;
 	}
@@ -39,14 +36,6 @@ public class ResourceTask {
 
 	public void setTaskDetailList(List<ResourceTaskDetail> taskDetailList) {
 		this.taskDetailList = taskDetailList;
-	}
-
-	public String getCustomQuery() {
-		return customQuery;
-	}
-
-	public void setCustomQuery(String customQuery) {
-		this.customQuery = customQuery;
 	}
 
 }

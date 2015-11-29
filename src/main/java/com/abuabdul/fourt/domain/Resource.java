@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,6 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "RESOURCE")
+//@NamedQuery(name="Resource.findAll", query="select r from Resource r")
 public class Resource {
 
 	@Id

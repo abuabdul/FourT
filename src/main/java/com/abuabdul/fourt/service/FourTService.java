@@ -14,6 +14,8 @@ public interface FourTService {
 
 	public void saveResourceTaskDetails(Resource resource) throws FourTServiceException;
 
+	public List<Resource> findAllResourceTaskDetails() throws FourTServiceException;
+
 	public List<Resource> findResourceByName(String resourceName) throws FourTServiceException;
 
 	public List<Resource> findResourceByTaskDate(Date taskDate) throws FourTServiceException;

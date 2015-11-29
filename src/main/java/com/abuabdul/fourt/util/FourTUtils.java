@@ -24,7 +24,7 @@ public class FourTUtils {
 		if (date != null) {
 			return dd_MM_YYYY.format(date);
 		}
-		return null;
+		return "";
 	}
 
 	public static Date simpleDateWithDDMMYYYY(String dateStr) throws FourTException {

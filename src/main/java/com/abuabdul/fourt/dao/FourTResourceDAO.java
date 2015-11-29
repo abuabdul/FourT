@@ -13,6 +13,8 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 public interface FourTResourceDAO {
 
 	public void saveResource(Resource resource) throws FourTServiceException;
+	
+	public List<Resource> findAllResources() throws FourTServiceException;
 
 	public List<Resource> findResourceByName(String resourceName) throws FourTServiceException;
 
