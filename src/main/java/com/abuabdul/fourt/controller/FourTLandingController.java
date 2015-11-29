@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.abuabdul.fourt.criteria.FourTResultCriteriaService;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
@@ -83,12 +84,11 @@ public class FourTLandingController {
 	public String viewTaskResults(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
 			ModelMap model) throws IOException {
 		log.debug("Entering viewTaskResults() in the FourTLandingController");
-		List<Resource> resources = Lists.newArrayList();
-		List<ResourceTaskDetail> resourceTaskDetails = Lists.newLinkedList();
 		try {
+			List<ResourceTaskDetail> resourceTaskDetails = Lists.newArrayList();
+			List<Resource> resources = new FourTResultCriteriaService(fourTService).findTasksBasedOn(resourceTaskDtl);
 			if (!isEmpty(resourceTaskDtl.getResourceName())) {
 				resources = fourTService.findResourceByName(resourceTaskDtl.getResourceName());
-				
 			}else{
 				resources = fourTService.findAllResourceTaskDetails();
 			}
@@ -124,7 +124,7 @@ public class FourTLandingController {
 
 	@RequestMapping(value = "/secure/resource/viewCustomTaskDetails.go")
 	public void customViewTaskDetails(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
 		List<Object[]> resultList = Lists.newArrayList();
 		try {
@@ -142,7 +142,7 @@ public class FourTLandingController {
 				response.getWriter().write(row);
 				response.getWriter().println();
 			}
-		} catch (FourTServiceException fse) {
+		} catch (IOException | FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(fse.getMessage());
 		}
