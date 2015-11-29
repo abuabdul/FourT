@@ -3,10 +3,14 @@
 <!-- Bootstrap -->
 <link href="<c:url value='/resources/css/bootstrap.min.css'/>"	rel="stylesheet">
 <link href="<c:url value='/resources/css/simple-sidebar.css'/>" rel="stylesheet">
+
 <!-- For Bootstrap Validator -->
 <link href="<c:url value='/resources/css/bootstrapValidator.min.css'/>" rel="stylesheet"/>
 
-<!-- Include Bootstrap Datepicker -->
+<!-- Include Bootstrap Datatable plugin -->
+<link rel="stylesheet" href="<c:url value='/resources/css/dataTables.bootstrap.min.css'/>" />
+
+<!-- Include Bootstrap Datepicker REMOVE LATER-->
 <link rel="stylesheet" href="<c:url value='/resources/css/daterangepicker.css'/>" />
 
 <!-- fourt style -->

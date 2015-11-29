@@ -17,7 +17,7 @@
 				</div>
 				<div class="row row-border">
 					<div class="col-lg-12">
-						<h3>Resource Task Tracker Details</h3>
+						<h3>Resource Task Details</h3>
 						<div class="padding-top5px padding-bottom5px">
 						 	<c:url var="resourceTaskTrackerViewUrl" value="/secure/resource/viewTaskDetailResults.go"/>
                             <form:form id="resourceTaskTrackerViewForm" class="form-inline" role="form" modelAttribute="resourceTaskTrackerForm" action="${resourceTaskTrackerViewUrl}" method="post">
@@ -29,7 +29,7 @@
                                              <form:option value="Raja">Raja</form:option>
                                              <form:option value="Sathish">Sathish</form:option>
                                          </form:select>
-                                    </div>   
+                                    </div>
                                 </div>
                                  <div class="form-group">
                                     <div class="col-xs-12 col-sm-8 col-md-5">
@@ -58,15 +58,42 @@
 								</div>
 							</form:form>
 						</div>
-						<div>
-						  <table>
-						     <tr>
-						       <td>hello</td>
-						     </tr>
-						  </table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /#page-content-wrapper -->
+						<div class="table-responsive padding-10px">
+						    <div class="page-header">
+  								<h2><small>Results based on above filters:</small></h2>
+							</div>
+							<table id="tasktracker" class="table table-striped table-bordered">
+								   <thead>
+								 		<tr>
+											<th>Task Date</th>
+											<th>Name</th>
+											<th>Task</th>
+											<th>Duration</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tfoot>
+								 		<tr>
+											<th>Task Date</th>
+											<th>Name</th>
+											<th>Task</th>
+											<th>Duration</th>
+											<th>Status</th>
+										</tr>
+									</tfoot>
+									<tbody>
+										<tr>
+											<td>Tiger Nixon</td>
+											<td>System Architect</td>
+											<td>Edinburgh Edinburgh Edinburgh Edinburgh</td>
+											<td>61</td>
+											<td>2011/04/25</td>
+										</tr>
+									</tbody>
+							</table>
+					  </div>
+				 </div>
+			 </div>
+		 </div>
+	 </div>
+		<!-- /#page-content-wrapper -->		

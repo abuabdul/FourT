@@ -1,4 +1,5 @@
-
+/* Menu Toggle Script */
+ 
 $(function(){
 	
 	$("#menu-toggle").click(function(e) {
@@ -6,4 +7,5 @@ $(function(){
 		$("#wrapper").toggleClass("toggled");
 	});
 	
+    $('#tasktracker').DataTable();
 });

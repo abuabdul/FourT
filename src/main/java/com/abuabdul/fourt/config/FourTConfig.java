@@ -1,7 +1,5 @@
 package com.abuabdul.fourt.config;
 
-import java.util.Properties;
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
@@ -124,8 +122,7 @@ public class FourTConfig {
 		 * If JpaVendorAdapter is set, persistence xml is not needed
 		 * 
 		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation(
-		 * "classpath:META-INF/persistence.xml");
+		 * entityManagerFactory.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
 		 * 
 		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
@@ -142,18 +139,6 @@ public class FourTConfig {
 		hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
 		hibernateJpaVendorAdapter.setGenerateDdl(false);
 		return hibernateJpaVendorAdapter;
-	}
-
-	// NOT needed
-	public Properties jpaProperties() {
-		Properties prop = new Properties();
-		/*
-		 * prop.put("javax.persistence.jdbc.url", url);
-		 * prop.put("javax.persistence.jdbc.user", "sa");
-		 * prop.put("javax.persistence.jdbc.password", "");
-		 * prop.put("javax.persistence.jdbc.driver", driverClassName);
-		 */
-		return prop;
 	}
 
 	@Bean(name = "transactionManager")
