@@ -1,8 +1,5 @@
 package com.abuabdul.fourt.controller;
 
-import static com.abuabdul.fourt.util.FourTUtils.simpleDateStringWithDDMMYYYY;
-import static org.springframework.util.StringUtils.isEmpty;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -14,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.abuabdul.fourt.criteria.FourTResultCriteriaService;
+import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
 import com.abuabdul.fourt.domain.Resource;
-import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
@@ -41,7 +36,7 @@ public class FourTLandingController {
 	private static final Logger log = LogManager.getLogger(FourTLandingController.class.getName());
 
 	@Autowired
-	private FourTConverter<ResourceTask, Resource> fourTConverter;
+	private FourTConverter<ResourceTask, ResourceTaskDetail, Resource> fourTConverter;
 
 	@Autowired
 	private FourTService fourTService;
@@ -85,29 +80,10 @@ public class FourTLandingController {
 			ModelMap model) throws IOException {
 		log.debug("Entering viewTaskResults() in the FourTLandingController");
 		try {
-			List<ResourceTaskDetail> resourceTaskDetails = Lists.newArrayList();
 			List<Resource> resources = new FourTResultCriteriaService(fourTService).findTasksBasedOn(resourceTaskDtl);
-			if (!isEmpty(resourceTaskDtl.getResourceName())) {
-				resources = fourTService.findResourceByName(resourceTaskDtl.getResourceName());
-			}else{
-				resources = fourTService.findAllResourceTaskDetails();
-			}
-			if (!CollectionUtils.isEmpty(resources)) {
-				for (Resource savedResource : resources) {
-					for (TaskDetail savedTaskDtl : savedResource.getTaskDetailList()) {
-						ResourceTaskDetail viewTaskDtl = new ResourceTaskDetail();
-						viewTaskDtl.setDuration(savedTaskDtl.getDuration().toString());
-						viewTaskDtl.setResourceName(savedResource.getName());
-						viewTaskDtl.setStatus(savedTaskDtl.getStatus());
-						viewTaskDtl
-								.setTaskDate(simpleDateStringWithDDMMYYYY(savedResource.getTaskDate()).toString());
-						viewTaskDtl.setTaskDesc(savedTaskDtl.getTaskDesc());
-						resourceTaskDetails.add(viewTaskDtl);
-					}
-				}
-			}
-			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
+			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resources);
 			model.addAttribute("resourceTaskDetails", resourceTaskDetails);
+			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
 		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(fse.getMessage());
@@ -128,7 +104,7 @@ public class FourTLandingController {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
 		List<Object[]> resultList = Lists.newArrayList();
 		try {
-			resultList = fourTService.viewCustomTaskResults(resourceTaskDtl.getCustomQuery());
+			resultList = fourTService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
 			// TODO GET metadata also
 			response.setContentType("text/plain");
 			response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", txtFileName));

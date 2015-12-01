@@ -3,12 +3,17 @@ package com.abuabdul.fourt.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.abuabdul.fourt.dao.FourTResourceDAO;
+import com.abuabdul.fourt.dao.FourTTaskDetailDAO;
 import com.abuabdul.fourt.domain.Resource;
+import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.service.FourTService;
 
@@ -23,14 +28,22 @@ public class FourTServiceImpl implements FourTService {
 	@Autowired
 	private FourTResourceDAO fourTResourceDAO;
 
+	@Autowired
+	private FourTTaskDetailDAO fourTTaskDetailDAO;
+
 	@Override
 	public void saveResourceTaskDetails(Resource resource) throws FourTServiceException {
 		fourTResourceDAO.saveResource(resource);
 	}
 
 	@Override
-	public List<Resource> findAllResourceTaskDetails() throws FourTServiceException {
+	public List<Resource> findAllResourceWithTaskDetails() throws FourTServiceException {
 		return fourTResourceDAO.findAllResources();
+	}
+
+	@Override
+	public List<TaskDetail> findAllTaskDetails() throws FourTServiceException {
+		return fourTTaskDetailDAO.findAllTaskDetails();
 	}
 
 	@Override
@@ -64,7 +77,18 @@ public class FourTServiceImpl implements FourTService {
 	}
 
 	@Override
-	public List<Object[]> viewCustomTaskResults(String nativeQuery) throws FourTServiceException {
+	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException {
 		return fourTResourceDAO.findCustomTaskResults(nativeQuery);
 	}
+
+	@Override
+	public EntityManager getEntityManager() {
+		return fourTResourceDAO.getEntityManager();
+	}
+
+	@Override
+	public List<Resource> findResourceByCriteriaQuery(CriteriaQuery<Resource> criteria) throws FourTServiceException {
+		return fourTResourceDAO.findResourceByCriteriaQuery(criteria);
+	}
+
 }

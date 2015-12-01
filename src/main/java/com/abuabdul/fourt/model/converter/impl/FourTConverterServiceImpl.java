@@ -1,7 +1,9 @@
 package com.abuabdul.fourt.model.converter.impl;
 
 import static com.abuabdul.fourt.util.FourTUtils.getUTCDateTime;
+import static com.abuabdul.fourt.util.FourTUtils.simpleDateStringWithDDMMYYYY;
 import static com.abuabdul.fourt.util.FourTUtils.simpleDateWithDDMMYYYY;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 import java.util.List;
 
@@ -23,7 +25,11 @@ import com.google.common.collect.Lists;
  *
  */
 @Component
-public class FourTConverterServiceImpl implements FourTConverter<ResourceTask, Resource> {
+public class FourTConverterServiceImpl
+		implements FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> {
+
+	public FourTConverterServiceImpl() {
+	}
 
 	@Override
 	public Resource convert(ResourceTask resourceTask) throws FourTException {
@@ -47,6 +53,23 @@ public class FourTConverterServiceImpl implements FourTConverter<ResourceTask, R
 			resource.setTaskDetailList(taskDetailList);
 		}
 		return resource;
+	}
+
+	@Override
+	public List<ResourceTaskDetail> convert(List<TaskDetail> taskDetails) throws FourTException {
+		List<ResourceTaskDetail> resourceTaskDetails = Lists.newArrayList();
+		if (!isEmpty(taskDetails)) {
+			for (TaskDetail savedTaskDetail : taskDetails) {
+				ResourceTaskDetail viewTaskDtl = new ResourceTaskDetail();
+				viewTaskDtl.setResourceName(savedTaskDetail.getResource().getName());
+				viewTaskDtl.setTaskDate(simpleDateStringWithDDMMYYYY(savedTaskDetail.getResource().getTaskDate()));
+				viewTaskDtl.setTaskDesc(savedTaskDetail.getTaskDesc());
+				viewTaskDtl.setDuration(savedTaskDetail.getDuration().toString());
+				viewTaskDtl.setStatus(savedTaskDetail.getStatus());
+				resourceTaskDetails.add(viewTaskDtl);
+			}
+		}
+		return resourceTaskDetails;
 	}
 
 }
