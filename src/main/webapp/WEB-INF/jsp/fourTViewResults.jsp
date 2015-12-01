@@ -60,7 +60,7 @@
 						<c:if test="${(empty resourceTaskDetails) and (not viewTasksLanding)}">
 							<div class="table-responsive padding-3px">
 							    <div class="page-header">
-	  								<h2><small>No Results</small></h2>
+	  								<h2><small>No Results Found</small></h2>
 								</div>
 							</div>
 						</c:if>			

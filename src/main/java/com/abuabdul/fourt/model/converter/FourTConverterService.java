@@ -1,4 +1,4 @@
-package com.abuabdul.fourt.model.converter.impl;
+package com.abuabdul.fourt.model.converter;
 
 import static com.abuabdul.fourt.util.FourTUtils.getUTCDateTime;
 import static com.abuabdul.fourt.util.FourTUtils.simpleDateStringWithDDMMYYYY;
@@ -14,7 +14,6 @@ import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
 import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
-import com.abuabdul.fourt.model.converter.FourTConverter;
 import com.google.common.collect.Lists;
 
 /**
@@ -25,11 +24,7 @@ import com.google.common.collect.Lists;
  *
  */
 @Component
-public class FourTConverterServiceImpl
-		implements FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> {
-
-	public FourTConverterServiceImpl() {
-	}
+public class FourTConverterService implements FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> {
 
 	@Override
 	public Resource convert(ResourceTask resourceTask) throws FourTException {

@@ -1,5 +1,7 @@
 package com.abuabdul.fourt.controller;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -45,6 +47,12 @@ public class FourTLandingController {
 	@Value("${custom.view.file.name}")
 	private String txtFileName;
 
+	@Value("${empty.custom.query.message}")
+	private String emptyCustomQueryString;
+
+	@Value("${no.custom.result.message}")
+	private String noResultString;
+	
 	@RequestMapping(value = "/landing/fourTOverview.go")
 	public String landingPage(ModelMap model) {
 		log.debug("Entering landingPage() in the FourTLandingController");
@@ -106,19 +114,26 @@ public class FourTLandingController {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
 		List<Object[]> resultList = Lists.newArrayList();
 		try {
-			resultList = fourTService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
 			// TODO GET metadata also
 			response.setContentType("text/plain");
 			response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", txtFileName));
 			response.setCharacterEncoding("UTF-8");
 
-			for (Object[] objects : resultList) {
-				String row = "";
-				for (Object obj : objects) {
-					row = row.concat(obj.toString()).concat("\t");
+			if (isEmpty(resourceTaskDtl.getCustomQuery())) {
+				response.getWriter().write(emptyCustomQueryString);
+			} else {
+				resultList = fourTService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
+				if (resultList.isEmpty()) {
+					response.getWriter().write(noResultString);
 				}
-				response.getWriter().write(row);
-				response.getWriter().println();
+				for (Object[] objects : resultList) {
+					String row = "";
+					for (Object obj : objects) {
+						row = row.concat(obj.toString()).concat("\t");
+					}
+					response.getWriter().write(row);
+					response.getWriter().println();
+				}
 			}
 		} catch (IOException | FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());

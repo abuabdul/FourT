@@ -48,7 +48,7 @@ var FOURT = window.FOURT || {};
                          }
             	},
             	customTaskValidator = {
-                   		selector: '.customTaskDetails',
+                   		selector: '.customQueryDetails',
                         validators: {
                              notEmpty: {
                                 message: 'The custom query is required and cannot be empty'
@@ -85,7 +85,7 @@ var FOURT = window.FOURT || {};
                             }
                         }
                     },
-                    customTaskDetails: customTaskValidator,
+                    customQueryDetails: customTaskValidator,
                     taskDetailDesc: taskDescValidator,
                     taskDetailDuration: taskDurationValidator,
                     taskDetailStatus: taskStatusValidator

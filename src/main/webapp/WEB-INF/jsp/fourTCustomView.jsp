@@ -24,7 +24,7 @@
 						<div class="form-group">
 							<label for="forTaskDetail" class="col-sm-4 control-label">Custom SQL Query</label>
 							<div class="col-xs-12 col-sm-8 col-md-5">
-								<form:textarea class="form-control customTaskDetails" rows="5" path="customQuery" placeholder="Write SQL Query to find task details" />
+								<form:textarea class="form-control customQueryDetails" rows="5" path="customQuery" placeholder="Write SQL Query to find task details" />
 							</div>
 						</div>
 						<div class="form-group">

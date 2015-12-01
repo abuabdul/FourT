@@ -1,4 +1,4 @@
-package com.abuabdul.fourt.service.impl;
+package com.abuabdul.fourt.service;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +15,6 @@ import com.abuabdul.fourt.dao.FourTTaskDetailDAO;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
-import com.abuabdul.fourt.service.FourTService;
 
 /**
  * @author abuabdul
