@@ -36,7 +36,8 @@ public interface FourTService {
 
 	public List<Resource> findResourceByTaskDurationGreaterThan(Float taskDuration) throws FourTServiceException;
 
-	public List<Resource> findResourceByCriteriaQuery(CriteriaQuery<Resource> criteria) throws FourTServiceException;
+	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
+			throws FourTServiceException;
 
 	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException;
 

@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 
 /**
@@ -14,19 +17,21 @@ import com.abuabdul.fourt.domain.TaskDetail;
  * @author abuabdul
  *
  */
-public class FourTByResourceTaskDateCriteria extends FourTAbstractCriteria<TaskDetail>implements FourTCriteria<TaskDetail> {
+public class FourTByResourceTaskDateCriteria extends FourTAbstractCriteria<TaskDetail>
+		implements FourTCriteria<TaskDetail> {
 
 	protected final Date byTaskDate;
 
 	public FourTByResourceTaskDateCriteria(CriteriaQuery<TaskDetail> criteria, CriteriaBuilder criteriaBuilder,
-			Date taskDate) {
-		super(criteria, criteriaBuilder);
+			Root<TaskDetail> root, Date taskDate) {
+		super(criteria, criteriaBuilder, root);
 		this.byTaskDate = taskDate;
 	}
 
 	@Override
 	public Predicate applyCriteria() {
-		Predicate p = criteriaBuilder.equal(root.get("taskDate"), byTaskDate);
+		Join<TaskDetail, Resource> owner = root.join("resource");
+		Predicate p = criteriaBuilder.equal(owner.get("taskDate"), byTaskDate);
 		return p;
 	}
 

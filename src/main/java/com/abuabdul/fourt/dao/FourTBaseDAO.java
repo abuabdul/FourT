@@ -13,7 +13,7 @@ import javax.persistence.PersistenceContext;
  * @param <E>
  * @param <K>
  */
-public class FourTBaseDAO<E, K extends Serializable> implements FourTDAO<E, K> {
+public abstract class FourTBaseDAO<E, K extends Serializable> implements FourTDAO<E, K> {
 
 	protected final Class<? extends E> genericClassType;
 
@@ -22,7 +22,8 @@ public class FourTBaseDAO<E, K extends Serializable> implements FourTDAO<E, K> {
 
 	@SuppressWarnings("unchecked")
 	public FourTBaseDAO() {
-		genericClassType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		genericClassType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
+				.getActualTypeArguments()[0];
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,12 +53,9 @@ public class FourTBaseDAO<E, K extends Serializable> implements FourTDAO<E, K> {
 		return true;
 	}
 
+	@Override
 	public EntityManager getEntityManager() {
 		return entityManager;
-	}
-
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 
 }

@@ -6,14 +6,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.stereotype.Repository;
 
 import com.abuabdul.fourt.dao.FourTBaseDAO;
 import com.abuabdul.fourt.dao.FourTResourceDAO;
 import com.abuabdul.fourt.domain.Resource;
-import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
 /**
@@ -25,14 +23,14 @@ public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements
 
 	@Override
 	public void saveResource(Resource resource) throws FourTServiceException {
-		save(resource);
+		super.save(resource);
 	}
 
 	@Override
 	public List<Resource> findAllResources() throws FourTServiceException {
-		return listAll();
+		return super.listAll();
 	}
-	
+
 	@Override
 	public List<Resource> findResourceByName(String resourceName) throws FourTServiceException {
 		TypedQuery<Resource> query = getEntityManager().createQuery("from Resource r where r.name=:resourceName",
@@ -91,10 +89,5 @@ public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements
 	@Override
 	public EntityManager getEntityManager() {
 		return super.getEntityManager();
-	}
-
-	@Override
-	public List<Resource> findResourceByCriteriaQuery(CriteriaQuery<Resource> criteria) throws FourTServiceException {
-		return getEntityManager().createQuery(criteria).getResultList();
 	}
 }

@@ -3,6 +3,7 @@ package com.abuabdul.fourt.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
@@ -18,4 +19,8 @@ public interface FourTTaskDetailDAO {
 	public List<TaskDetail> findAllTaskDetails() throws FourTServiceException;
 
 	public void saveTaskDetail(TaskDetail taskDetail) throws FourTServiceException;
+
+	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
+			throws FourTServiceException;
+
 }

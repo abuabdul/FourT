@@ -3,6 +3,7 @@ package com.abuabdul.fourt.dao.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +20,13 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 public class FourTTaskDetailDAOImpl extends FourTBaseDAO<TaskDetail, Long>implements FourTTaskDetailDAO {
 
 	@Override
+	public EntityManager getEntityManager() {
+		return super.getEntityManager();
+	}
+
+	@Override
 	public void saveTaskDetail(TaskDetail taskDetail) throws FourTServiceException {
-		save(taskDetail);
+		super.save(taskDetail);
 	}
 
 	@Override
@@ -29,8 +35,9 @@ public class FourTTaskDetailDAOImpl extends FourTBaseDAO<TaskDetail, Long>implem
 	}
 
 	@Override
-	public EntityManager getEntityManager() {
-		return super.getEntityManager();
+	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
+			throws FourTServiceException {
+		return getEntityManager().createQuery(criteria).getResultList();
 	}
 
 }

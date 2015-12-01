@@ -2,11 +2,15 @@ package com.abuabdul.fourt.criteria.fallback;
 
 import java.util.List;
 
-import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
-public interface FourTDefaultCriteria {
+/**
+ * @author abuabdul
+ *
+ * @param <T>
+ */
+public interface FourTDefaultCriteria<T> {
 
-	List<TaskDetail> defaultSelectAllCriteria() throws FourTServiceException;
+	List<T> defaultSelectAllCriteria() throws FourTServiceException;
 
 }

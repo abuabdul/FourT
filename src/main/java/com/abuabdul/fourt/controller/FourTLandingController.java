@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
 import com.abuabdul.fourt.domain.Resource;
+import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
@@ -36,7 +37,7 @@ public class FourTLandingController {
 	private static final Logger log = LogManager.getLogger(FourTLandingController.class.getName());
 
 	@Autowired
-	private FourTConverter<ResourceTask, ResourceTaskDetail, Resource> fourTConverter;
+	private FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter;
 
 	@Autowired
 	private FourTService fourTService;
@@ -80,8 +81,9 @@ public class FourTLandingController {
 			ModelMap model) throws IOException {
 		log.debug("Entering viewTaskResults() in the FourTLandingController");
 		try {
-			List<Resource> resources = new FourTResultCriteriaService(fourTService).findTasksBasedOn(resourceTaskDtl);
-			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resources);
+			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
+					.findTasksBasedOn(resourceTaskDtl);
+			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
 			model.addAttribute("resourceTaskDetails", resourceTaskDetails);
 			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
 		} catch (FourTServiceException fse) {

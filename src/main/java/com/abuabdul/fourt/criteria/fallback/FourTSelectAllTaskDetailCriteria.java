@@ -7,16 +7,16 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.service.FourTService;
 
 /**
- * Criteria to find Results for All Resources
+ * Criteria to find Results for All Task Details
  * 
  * @author abuabdul
  *
  */
-public class FourTSelectAllResourceCriteria implements FourTDefaultCriteria {
+public class FourTSelectAllTaskDetailCriteria implements FourTDefaultCriteria<TaskDetail> {
 
 	private final FourTService fourTService;
 
-	public FourTSelectAllResourceCriteria(FourTService fourTService) {
+	public FourTSelectAllTaskDetailCriteria(FourTService fourTService) {
 		this.fourTService = fourTService;
 	}
 

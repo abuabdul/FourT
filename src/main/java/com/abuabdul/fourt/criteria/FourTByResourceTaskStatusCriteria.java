@@ -19,15 +19,14 @@ public class FourTByResourceTaskStatusCriteria extends FourTAbstractCriteria<Tas
 	protected final String byTaskStatus;
 
 	public FourTByResourceTaskStatusCriteria(CriteriaQuery<TaskDetail> criteria, CriteriaBuilder criteriaBuilder,
-			String taskStatus) {
-		super(criteria, criteriaBuilder);
+			Root<TaskDetail> root, String taskStatus) {
+		super(criteria, criteriaBuilder, root);
 		this.byTaskStatus = taskStatus;
 	}
 
 	@Override
 	public Predicate applyCriteria() {
-		Root<TaskDetail> fromTaskDetail = criteriaQuery.from(TaskDetail.class);
-		Predicate p = criteriaBuilder.equal(fromTaskDetail.get("status"), byTaskStatus);
+		Predicate p = criteriaBuilder.equal(root.get("status"), byTaskStatus);
 		return p;
 	}
 

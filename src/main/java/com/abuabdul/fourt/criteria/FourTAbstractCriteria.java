@@ -4,7 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.abuabdul.fourt.domain.Resource;
+import com.abuabdul.fourt.domain.TaskDetail;
 
 /**
  * @author abuabdul
@@ -15,12 +15,12 @@ public abstract class FourTAbstractCriteria<T> implements FourTCriteria<T> {
 
 	protected final CriteriaQuery<T> criteriaQuery;
 	protected final CriteriaBuilder criteriaBuilder;
-	protected final Root<Resource> root;
+	protected final Root<TaskDetail> root;
 
-	public FourTAbstractCriteria(CriteriaQuery<T> criteria, CriteriaBuilder criteriaBuilder) {
+	public FourTAbstractCriteria(CriteriaQuery<T> criteria, CriteriaBuilder criteriaBuilder, Root<TaskDetail> root) {
 		this.criteriaQuery = criteria;
 		this.criteriaBuilder = criteriaBuilder;
-		this.root = criteriaQuery.from(Resource.class);
+		this.root = root;
 	}
 
 }

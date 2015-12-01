@@ -87,8 +87,9 @@ public class FourTServiceImpl implements FourTService {
 	}
 
 	@Override
-	public List<Resource> findResourceByCriteriaQuery(CriteriaQuery<Resource> criteria) throws FourTServiceException {
-		return fourTResourceDAO.findResourceByCriteriaQuery(criteria);
+	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
+			throws FourTServiceException {
+		return fourTTaskDetailDAO.findTaskDetailByCriteriaQuery(criteria);
 	}
 
 }

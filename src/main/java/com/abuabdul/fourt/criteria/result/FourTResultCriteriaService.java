@@ -2,8 +2,8 @@ package com.abuabdul.fourt.criteria.result;
 
 import java.util.List;
 
-import com.abuabdul.fourt.criteria.builder.FourTResourceCriteriaBuilder;
-import com.abuabdul.fourt.criteria.fallback.FourTSelectAllResourceCriteria;
+import com.abuabdul.fourt.criteria.builder.FourTResourceTaskCriteriaBuilder;
+import com.abuabdul.fourt.criteria.fallback.FourTSelectAllTaskDetailCriteria;
 import com.abuabdul.fourt.criteria.predicate.FourTPredicateServiceImpl;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
@@ -24,14 +24,14 @@ public class FourTResultCriteriaService implements FourTResultCriteria {
 
 	@Override
 	public List<TaskDetail> findTasksBasedOn(ResourceTaskDetail resourceTaskDtl) throws FourTServiceException {
-		return new FourTResourceCriteriaBuilder(fourTService)
+		return new FourTResourceTaskCriteriaBuilder(fourTService)
 				.withInputResourceTaskDetail(resourceTaskDtl)
-				.withPredicateService(new FourTPredicateServiceImpl<TaskDetail>())
+				.withPredicateService(new FourTPredicateServiceImpl())
 				.addResourceNameCriteria()
 				.addTaskDateCriteria()
 				.addTaskDurationCriteria()
 				.addTaskStatusCriteria()
-				.withDefaultCriteria(new FourTSelectAllResourceCriteria(fourTService))
+				.withDefaultCriteria(new FourTSelectAllTaskDetailCriteria(fourTService))
 				.executeCriteria();
 	}
 

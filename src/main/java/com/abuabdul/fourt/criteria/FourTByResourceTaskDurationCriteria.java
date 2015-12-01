@@ -2,8 +2,8 @@ package com.abuabdul.fourt.criteria;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import com.abuabdul.fourt.domain.TaskDetail;
 
@@ -19,15 +19,14 @@ public class FourTByResourceTaskDurationCriteria extends FourTAbstractCriteria<T
 	private final Float byTaskDuration;
 
 	public FourTByResourceTaskDurationCriteria(CriteriaQuery<TaskDetail> criteria, CriteriaBuilder criteriaBuilder,
-			Float taskDuration) {
-		super(criteria, criteriaBuilder);
+			Root<TaskDetail> root, Float taskDuration) {
+		super(criteria, criteriaBuilder, root);
 		this.byTaskDuration = taskDuration;
 	}
 
 	@Override
 	public Predicate applyCriteria() {
-		Path<Object> path = root.join("taskDetailList").get("duration");
-		Predicate p = criteriaBuilder.equal(path, byTaskDuration);
+		Predicate p = criteriaBuilder.equal(root.get("duration"), byTaskDuration);
 		return p;
 	}
 
