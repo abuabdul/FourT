@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hsqldb.util.DatabaseManagerSwing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
+import com.abuabdul.fourt.db.manager.service.FourTDBManager;
+import com.abuabdul.fourt.db.manager.service.FourTDBManagerService;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
@@ -24,6 +27,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.model.converter.FourTConverter;
+import com.abuabdul.fourt.service.FourTReadOnlyService;
 import com.abuabdul.fourt.service.FourTService;
 import com.google.common.collect.Lists;
 
@@ -43,6 +47,9 @@ public class FourTLandingController {
 
 	@Autowired
 	private FourTService fourTService;
+	
+	@Autowired
+	private FourTReadOnlyService fourTReadOnlyService;
 
 	@Value("${custom.view.file.name}")
 	private String txtFileName;
@@ -52,7 +59,7 @@ public class FourTLandingController {
 
 	@Value("${no.custom.result.message}")
 	private String noResultString;
-	
+
 	@RequestMapping(value = "/landing/fourTOverview.go")
 	public String landingPage(ModelMap model) {
 		log.debug("Entering landingPage() in the FourTLandingController");
@@ -94,11 +101,11 @@ public class FourTLandingController {
 			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
 			model.addAttribute("resourceTaskDetails", resourceTaskDetails);
 			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
+			return "viewTasks";
 		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(fse.getMessage());
 		}
-		return "viewTasks";
 	}
 
 	@RequestMapping(value = "/landing/fourTCustomView.go")
@@ -122,7 +129,7 @@ public class FourTLandingController {
 			if (isEmpty(resourceTaskDtl.getCustomQuery())) {
 				response.getWriter().write(emptyCustomQueryString);
 			} else {
-				resultList = fourTService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
+				resultList = fourTReadOnlyService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
 				if (resultList.isEmpty()) {
 					response.getWriter().write(noResultString);
 				}
@@ -137,15 +144,20 @@ public class FourTLandingController {
 			}
 		} catch (IOException | FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
-			throw new FourTException(fse.getMessage());
+			throw new FourTException("FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
 		}
 	}
 
 	@RequestMapping(value = "/landing/fourTDBManagerTool.go")
-	public String dbManagerTool(ModelMap model) {
+	public void dbManagerTool(ModelMap model) {
 		log.debug("Entering dbManagerTool() in the FourTLandingController");
-		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
-		return "landingPage";
+		try {
+			FourTDBManager<DatabaseManagerSwing> fourTDBManager = new FourTDBManagerService(DatabaseManagerSwing.class,
+					"main", new String[] { "--url", "jdbc:hsqldb:mem:fourtdb", "--user", "sa", "--password", "" });
+			fourTDBManager.runDBManagerTool();
+		} catch (FourTServiceException fse) {
+			log.debug("FourTServiceException - " + fse.getMessage());
+			throw new FourTException(fse.getMessage());
+		}
 	}
-
 }

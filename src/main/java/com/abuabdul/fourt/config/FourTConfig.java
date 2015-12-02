@@ -34,46 +34,52 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 public class FourTConfig {
 
 	@Value("${fourt.db.script.classpath.location}")
-	private String dbScript;
-	
+	protected String dbScript;
+
 	@Value("${fourt.tasktracker.db.name}")
-	private String taskTrackerDBName;
-	
+	protected String taskTrackerDBName;
+
 	@Value("${fourt.tasktracker.db.dialect}")
-	private String taskTrackerDBDialect;
-	
+	protected String taskTrackerDBDialect;
+
 	@Value("${fourt.domain.packages.to.scan}")
-	private String packagesToScan;
-	
+	protected String packagesToScan;
+
 	@Value("${jdbc.driverClassName}")
-	private String driverClassName;
+	protected String driverClassName;
 
 	@Value("${OPENSHIFT_HSQL_DB_HOST}")
-	private String host;
+	protected String host;
 
 	@Value("${OPENSHIFT_HSQL_DB_PORT}")
-	private String port;
+	protected String port;
 
 	@Value("${OPENSHIFT_HSQL_DB_USERNAME}")
-	private String username;
+	protected String username;
 
 	@Value("${OPENSHIFT_HSQL_DB_PASSWORD}")
-	private String password;
+	protected String password;
+
+	@Value("${OPENSHIFT_HSQL_DB_READONLY_USERNAME}")
+	protected String readOnlyUser;
+
+	@Value("${OPENSHIFT_HSQL_DB_READONLY_PASSWORD}")
+	protected String readOnlyPassword;
 
 	@Value("${jdbc.poolInitialSize}")
-	private int initialSize;
+	protected int initialSize;
 
 	@Value("${jdbc.poolMaxTotal}")
-	private int maxTotal;
+	protected int maxTotal;
 
 	@Value("${jdbc.poolMinIdle}")
-	private int minIdle;
+	protected int minIdle;
 
 	@Value("${jdbc.poolMaxIdle}")
-	private int maxIdle;
+	protected int maxIdle;
 
 	@Value("${jdbc.poolMaxWaitMillis}")
-	private int maxWaitMillis;
+	protected int maxWaitMillis;
 
 	private static final String APPCONFIG_FILE_NAME = "Appconfig.properties";
 
@@ -89,9 +95,7 @@ public class FourTConfig {
 
 	@Bean(name = "embeddedDatabase")
 	public EmbeddedDatabase embeddedDatabase() {
-		return new EmbeddedDatabaseBuilder()
-				.setName(taskTrackerDBName)
-				.setType(EmbeddedDatabaseType.HSQL)
+		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL)
 				.addScript(dbScript).build();
 	}
 
@@ -126,28 +130,31 @@ public class FourTConfig {
 		return datasource;
 	}
 
-	@Bean
+	
+	@Bean(name="entityManager")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
-
+		entityManagerFactory.setPersistenceUnitName("allPrivileges");
 		/*
 		 * If JpaVendorAdapter is set, persistence xml is not needed
 		 * 
 		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
+		 * entityManagerFactory.setPersistenceXmlLocation(
+		 * "classpath:META-INF/persistence.xml");
 		 * 
 		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		//Need to specify when entity class is not specified in persistence.xml
+		// Need to specify when entity class is not specified in persistence.xml
 		entityManagerFactory.setPackagesToScan(packagesToScan);
 		return entityManagerFactory;
 	}
 
+	
 	@Bean
-	public JpaVendorAdapter jpaVendorAdapter() {
+	protected JpaVendorAdapter jpaVendorAdapter() {
 		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
 		hibernateJpaVendorAdapter.setDatabasePlatform(taskTrackerDBDialect);
 		hibernateJpaVendorAdapter.setGenerateDdl(false);

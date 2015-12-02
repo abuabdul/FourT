@@ -13,15 +13,15 @@ import javax.persistence.PersistenceContext;
  * @param <E>
  * @param <K>
  */
-public abstract class FourTBaseDAO<E, K extends Serializable> implements FourTDAO<E, K> {
+public abstract class FourTReadOnlyBaseDAO<E, K extends Serializable> implements FourTReadOnlyDAO<E, K> {
 
 	protected final Class<? extends E> genericClassType;
 	
-	@PersistenceContext(unitName="allPrivileges")
+	@PersistenceContext(unitName="readOnly")
 	private EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
-	public FourTBaseDAO() {
+	public FourTReadOnlyBaseDAO() {
 		genericClassType = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
 	}
@@ -33,24 +33,8 @@ public abstract class FourTBaseDAO<E, K extends Serializable> implements FourTDA
 	}
 
 	@Override
-	public void save(E entity) {
-		entityManager.persist(entity);
-	}
-
-	@Override
 	public E find(K key) {
 		return entityManager.find(genericClassType, key);
-	}
-
-	@Override
-	public void update(E entity) {
-		entityManager.merge(entity);
-	}
-
-	@Override
-	public boolean delete(E entity) {
-		entityManager.remove(entity);
-		return true;
 	}
 
 	@Override

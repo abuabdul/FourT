@@ -21,7 +21,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  *
  */
 @Service
-@Transactional
+@Transactional(value="transactionManager")
 public class FourTServiceImpl implements FourTService {
 
 	@Autowired
@@ -73,11 +73,6 @@ public class FourTServiceImpl implements FourTService {
 	@Override
 	public List<Resource> findResourceByTaskDurationGreaterThan(Float taskDuration) throws FourTServiceException {
 		return fourTResourceDAO.findResourceByTaskDurationGreaterThan(taskDuration);
-	}
-
-	@Override
-	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException {
-		return fourTResourceDAO.findCustomTaskResults(nativeQuery);
 	}
 
 	@Override

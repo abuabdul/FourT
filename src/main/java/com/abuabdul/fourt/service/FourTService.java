@@ -38,7 +38,4 @@ public interface FourTService {
 
 	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
 			throws FourTServiceException;
-
-	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException;
-
 }
