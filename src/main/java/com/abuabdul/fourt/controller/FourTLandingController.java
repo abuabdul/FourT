@@ -16,6 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
 import com.abuabdul.fourt.db.manager.service.FourTDBManager;
@@ -47,12 +50,15 @@ public class FourTLandingController {
 
 	@Autowired
 	private FourTService fourTService;
-	
+
 	@Autowired
 	private FourTReadOnlyService fourTReadOnlyService;
 
 	@Value("${custom.view.file.name}")
 	private String txtFileName;
+
+	@Value("${export.excel.file.name}")
+	private String excelFileName;
 
 	@Value("${empty.custom.query.message}")
 	private String emptyCustomQueryString;
@@ -144,44 +150,41 @@ public class FourTLandingController {
 			}
 		} catch (IOException | FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
-			throw new FourTException("FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
+			throw new FourTException(
+					"FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
 		}
 	}
 
-	@RequestMapping(value = "/landing/fourTExportToExcel.go")
+	@RequestMapping(value = "/secure/taskdetails/fourTExportToExcel.go")
 	public void exportTaskResultToExcel(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
 			HttpServletResponse response) {
 		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
-		List<Object[]> resultList = Lists.newArrayList();
 		try {
-			// TODO GET metadata also
-			response.setContentType("text/plain");
-			response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", txtFileName));
+			response.setContentType("text/csv");
+			response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", excelFileName));
 			response.setCharacterEncoding("UTF-8");
+			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
+					.findTasksBasedOn(resourceTaskDtl);
+			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
 
-			if (isEmpty(resourceTaskDtl.getCustomQuery())) {
-				response.getWriter().write(emptyCustomQueryString);
-			} else {
-				resultList = fourTReadOnlyService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
-				if (resultList.isEmpty()) {
-					response.getWriter().write(noResultString);
-				}
-				for (Object[] objects : resultList) {
-					String row = "";
-					for (Object obj : objects) {
-						row = row.concat(obj.toString()).concat("\t");
-					}
-					response.getWriter().write(row);
-					response.getWriter().println();
-				}
+			// uses the Super CSV API to generate CSV data from the model data
+			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+
+			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };
+			String[] headerMapping = { "TaskDate", "ResourceName", "TaskDesc", "Duration", "Status" };
+
+			csvWriter.writeHeader(header);
+
+			for (ResourceTaskDetail savedResourceTaskDtl : resourceTaskDetails) {
+				csvWriter.write(savedResourceTaskDtl, headerMapping);
 			}
-		} catch (IOException | FourTServiceException fse) {
+			csvWriter.close();
+		} catch (FourTServiceException | IOException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
-			throw new FourTException("FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
+			throw new FourTException(fse.getMessage());
 		}
 	}
 
-	
 	@RequestMapping(value = "/landing/fourTDBManagerTool.go")
 	public void dbManagerTool(ModelMap model) {
 		log.debug("Entering dbManagerTool() in the FourTLandingController");

@@ -65,9 +65,11 @@
 							</div>
 						</c:if>			
 						<c:if test="${not empty resourceTaskDetails}">
+						    <c:url var="exportTaskResultsUrl" value="/secure/taskdetails/fourTExportToExcel.go"/>
 							<div class="table-responsive padding-3px">
 							    <div class="page-header">
 	  								<h2><small>Results based on above filters:</small></h2>
+	  								<h4><small><a href="${exportTaskResultsUrl}"><i class="fa fa-file-excel-o"></i> Export To Excel</a></small></h4>
 								</div>
 								<table id="tasktracker" class="table table-striped table-bordered">
 									   <thead>

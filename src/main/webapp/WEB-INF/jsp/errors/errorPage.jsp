@@ -20,9 +20,8 @@
 				<div class="box box-primary innerpage-wrapper">
 					<div class="box-body">
 						<div class="alert alert-danger">
-							<i class="glyphicon glyphicon-warning-sign bigger"></i>&nbsp; <span>Some
-								Error Occurred. Please try again.</span> <br>
-							<!-- REMOVE later -->
+							<i class="glyphicon glyphicon-warning-sign bigger"></i>&nbsp; 
+							<span>Some Error Occurred. Please try again.</span> <br>
 							<div>${exception}</div>
 						</div>
 					</div>
