@@ -111,6 +111,38 @@ public class FourTLandingController {
 		}
 	}
 
+	@RequestMapping(value = "/secure/taskdetails/fourTExportToExcel.go")
+	public void exportTaskResultToExcel(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
+			HttpServletRequest request, HttpServletResponse response) {
+		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
+		try {
+			RequestContext requestContext = new RequestContext(request);
+			response.setContentType("text/csv");
+			response.setHeader("Content-Disposition",
+					String.format("attachment; filename=\"%s\"", requestContext.getMessage(ExcelFileName)));
+			response.setCharacterEncoding("UTF-8");
+			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
+					.findTasksBasedOn(resourceTaskDtl);
+			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
+
+			// uses the Super CSV API to generate CSV data from the model data
+			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+
+			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };
+			String[] headerMapping = { "TaskDate", "ResourceName", "TaskDesc", "Duration", "Status" };
+
+			csvWriter.writeHeader(header);
+
+			for (ResourceTaskDetail savedResourceTaskDtl : resourceTaskDetails) {
+				csvWriter.write(savedResourceTaskDtl, headerMapping);
+			}
+			csvWriter.close();
+		} catch (FourTServiceException | IOException fse) {
+			log.debug("FourTServiceException - " + fse.getMessage());
+			throw new FourTException(fse.getMessage());
+		}
+	}
+
 	@RequestMapping(value = "/landing/fourTCustomView.go")
 	public String customView(ModelMap model) {
 		log.debug("Entering customView() in the FourTLandingController");
@@ -153,40 +185,8 @@ public class FourTLandingController {
 		}
 	}
 
-	@RequestMapping(value = "/secure/taskdetails/fourTExportToExcel.go")
-	public void exportTaskResultToExcel(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
-			HttpServletRequest request, HttpServletResponse response) {
-		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
-		try {
-			RequestContext requestContext = new RequestContext(request);
-			response.setContentType("text/csv");
-			response.setHeader("Content-Disposition",
-					String.format("attachment; filename=\"%s\"", requestContext.getMessage(ExcelFileName)));
-			response.setCharacterEncoding("UTF-8");
-			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
-					.findTasksBasedOn(resourceTaskDtl);
-			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
-
-			// uses the Super CSV API to generate CSV data from the model data
-			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-
-			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };
-			String[] headerMapping = { "TaskDate", "ResourceName", "TaskDesc", "Duration", "Status" };
-
-			csvWriter.writeHeader(header);
-
-			for (ResourceTaskDetail savedResourceTaskDtl : resourceTaskDetails) {
-				csvWriter.write(savedResourceTaskDtl, headerMapping);
-			}
-			csvWriter.close();
-		} catch (FourTServiceException | IOException fse) {
-			log.debug("FourTServiceException - " + fse.getMessage());
-			throw new FourTException(fse.getMessage());
-		}
-	}
-
 	@RequestMapping(value = "/landing/fourTDBManagerTool.go")
-	public void dbManagerTool(ModelMap model) {
+	public void dbManagerTool(ModelMap model, HttpServletResponse response) {
 		log.debug("Entering dbManagerTool() in the FourTLandingController");
 		try {
 			FourTDBManager<DatabaseManagerSwing> fourTDBManager = new FourTDBManagerService(DatabaseManagerSwing.class,

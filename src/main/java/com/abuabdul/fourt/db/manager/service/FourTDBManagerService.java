@@ -1,7 +1,7 @@
 package com.abuabdul.fourt.db.manager.service;
 
 import org.hsqldb.util.DatabaseManagerSwing;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
+import org.springframework.beans.factory.config.MethodInvokingBean;
 
 import com.abuabdul.fourt.exception.FourTServiceException;
 
@@ -19,7 +19,7 @@ public class FourTDBManagerService extends FourTAbstractDBManager<DatabaseManage
 	@Override
 	public void runDBManagerTool() throws FourTServiceException {
 		try {
-			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
+			MethodInvokingBean methodInvokingBean = new MethodInvokingBean();
 			methodInvokingBean.setTargetClass(dbmanagerClass);
 			methodInvokingBean.setTargetMethod(mainMethod);
 			methodInvokingBean.setArguments(args);

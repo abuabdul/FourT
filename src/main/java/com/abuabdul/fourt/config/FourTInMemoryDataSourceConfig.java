@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hsqldb.util.DatabaseManagerSwing;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
+import org.springframework.beans.factory.config.MethodInvokingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -34,15 +34,14 @@ public class FourTInMemoryDataSourceConfig extends FourTConfig {
 				.addScript(dbScript).build();
 	}
 
-	// Disable after development
 	@PostConstruct
 	public void startDBManager() throws FourTServiceException {
 		try {
-			MethodInvokingFactoryBean methodInvokingBean = new MethodInvokingFactoryBean();
+			MethodInvokingBean methodInvokingBean = new MethodInvokingBean();
 			methodInvokingBean.setTargetClass(DatabaseManagerSwing.class);
 			methodInvokingBean.setTargetMethod("main");
-			methodInvokingBean.setArguments(
-					new String[] { "--url", getSQLDBUrl(), "--user", username, "--password", password });
+			methodInvokingBean
+					.setArguments(new String[] { "--url", getSQLDBUrl(), "--user", username, "--password", password });
 			methodInvokingBean.prepare();
 			methodInvokingBean.invoke();
 		} catch (Exception ex) {
@@ -92,11 +91,11 @@ public class FourTInMemoryDataSourceConfig extends FourTConfig {
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
 		return jpaTransactionManager;
 	}
-	
+
 	protected String getSQLDBUrl() {
 		return new StringBuilder("jdbc:hsqldb:mem:").append(taskTrackerDBName).toString();
 	}
-	
+
 	@Bean(destroyMethod = "close")
 	public DataSource readOnlyDataSource() {
 		BasicDataSource datasource = new BasicDataSource();
@@ -111,7 +110,7 @@ public class FourTInMemoryDataSourceConfig extends FourTConfig {
 		datasource.setMaxWaitMillis(maxWaitMillis);
 		return datasource;
 	}
-	
+
 	@Bean(name = "readOnlyEntityManager")
 	public LocalContainerEntityManagerFactoryBean readOnlyEntityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
