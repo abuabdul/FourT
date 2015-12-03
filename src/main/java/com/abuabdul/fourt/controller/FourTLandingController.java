@@ -148,6 +148,40 @@ public class FourTLandingController {
 		}
 	}
 
+	@RequestMapping(value = "/landing/fourTExportToExcel.go")
+	public void exportTaskResultToExcel(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
+			HttpServletResponse response) {
+		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
+		List<Object[]> resultList = Lists.newArrayList();
+		try {
+			// TODO GET metadata also
+			response.setContentType("text/plain");
+			response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", txtFileName));
+			response.setCharacterEncoding("UTF-8");
+
+			if (isEmpty(resourceTaskDtl.getCustomQuery())) {
+				response.getWriter().write(emptyCustomQueryString);
+			} else {
+				resultList = fourTReadOnlyService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
+				if (resultList.isEmpty()) {
+					response.getWriter().write(noResultString);
+				}
+				for (Object[] objects : resultList) {
+					String row = "";
+					for (Object obj : objects) {
+						row = row.concat(obj.toString()).concat("\t");
+					}
+					response.getWriter().write(row);
+					response.getWriter().println();
+				}
+			}
+		} catch (IOException | FourTServiceException fse) {
+			log.debug("FourTServiceException - " + fse.getMessage());
+			throw new FourTException("FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
+		}
+	}
+
+	
 	@RequestMapping(value = "/landing/fourTDBManagerTool.go")
 	public void dbManagerTool(ModelMap model) {
 		log.debug("Entering dbManagerTool() in the FourTLandingController");
