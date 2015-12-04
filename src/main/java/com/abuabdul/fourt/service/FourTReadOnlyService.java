@@ -10,7 +10,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-public interface FourTReadOnlyService {
+public interface FourTReadOnlyService extends FourTService {
 
 	public EntityManager getEntityManager();
 

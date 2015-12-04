@@ -35,23 +35,14 @@ public class FourTStandaloneDataSourceConfig extends FourTConfig {
 		return datasource;
 	}
 
-	@Bean(name = "entityManager")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
 		entityManagerFactory.setPersistenceUnitName("allPrivileges");
-		/*
-		 * If JpaVendorAdapter is set, persistence xml is not needed
-		 * 
-		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation(
-		 * "classpath:META-INF/persistence.xml");
-		 * 
-		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		// Need to specify when entity class is not specified in persistence.xml
 		entityManagerFactory.setPackagesToScan(packagesToScan);
 		return entityManagerFactory;
 	}
@@ -83,23 +74,14 @@ public class FourTStandaloneDataSourceConfig extends FourTConfig {
 		return datasource;
 	}
 
-	@Bean(name = "readOnlyEntityManager")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean readOnlyEntityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(readOnlyDataSource());
 		entityManagerFactory.setPersistenceUnitName("readOnly");
-		/*
-		 * If JpaVendorAdapter is set, persistence xml is not needed
-		 * 
-		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation(
-		 * "classpath:META-INF/persistence.xml");
-		 * 
-		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		// Need to specify when entity class is not specified in persistence.xml
 		entityManagerFactory.setPackagesToScan(packagesToScan);
 		return entityManagerFactory;
 	}

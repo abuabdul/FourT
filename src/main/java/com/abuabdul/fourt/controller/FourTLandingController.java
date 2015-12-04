@@ -1,8 +1,5 @@
 package com.abuabdul.fourt.controller;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.support.RequestContext;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.io.ICsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
 
 import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
+import com.abuabdul.fourt.data.exporter.FourTCSVDataFileExporter;
+import com.abuabdul.fourt.data.exporter.FourTFileWriterService;
+import com.abuabdul.fourt.data.exporter.FourTFileWriterServiceImpl;
+import com.abuabdul.fourt.data.exporter.FourTPlainTextDataFileExporter;
 import com.abuabdul.fourt.db.manager.service.FourTDBManager;
 import com.abuabdul.fourt.db.manager.service.FourTDBManagerService;
 import com.abuabdul.fourt.domain.Resource;
@@ -32,8 +29,7 @@ import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.model.converter.FourTConverter;
 import com.abuabdul.fourt.service.FourTReadOnlyService;
-import com.abuabdul.fourt.service.FourTService;
-import com.google.common.collect.Lists;
+import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
  * @author abuabdul
@@ -46,19 +42,11 @@ public class FourTLandingController {
 	// Logger instance named "FourTLandingController".
 	private static final Logger log = LogManager.getLogger(FourTLandingController.class.getName());
 
-	private final static String ExcelFileName = "export.excel.file.name";
-
-	private final static String TxtFileName = "custom.view.file.name";
-
-	private final static String EmptyCustomQueryString = "empty.custom.query.message";
-
-	private final static String NoResultString = "no.custom.result.message";
-
 	@Autowired
 	private FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter;
 
 	@Autowired
-	private FourTService fourTService;
+	private FourTVetoService fourTVetoService;
 
 	@Autowired
 	private FourTReadOnlyService fourTReadOnlyService;
@@ -76,7 +64,7 @@ public class FourTLandingController {
 		log.debug("Entering saveResourceTaskDetails() in the FourTLandingController");
 		try {
 			Resource resource = fourTConverter.convert(resourceTask);
-			fourTService.saveResourceTaskDetails(resource);
+			fourTVetoService.saveResourceTaskDetails(resource);
 			model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
 			model.addAttribute("saveTaskDetails", true);
 			return "landingPage";
@@ -96,12 +84,12 @@ public class FourTLandingController {
 
 	@RequestMapping(value = "/secure/resource/viewTaskDetailResults.go")
 	public String viewTaskResults(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
-			ModelMap model) throws IOException {
+			ModelMap model) {
 		log.debug("Entering viewTaskResults() in the FourTLandingController");
 		try {
-			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
+			List<TaskDetail> savedTaskDetail = new FourTResultCriteriaService(fourTVetoService)
 					.findTasksBasedOn(resourceTaskDtl);
-			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
+			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(savedTaskDetail);
 			model.addAttribute("resourceTaskDetails", resourceTaskDetails);
 			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
 			return "viewTasks";
@@ -116,28 +104,10 @@ public class FourTLandingController {
 			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
 		try {
-			RequestContext requestContext = new RequestContext(request);
-			response.setContentType("text/csv");
-			response.setHeader("Content-Disposition",
-					String.format("attachment; filename=\"%s\"", requestContext.getMessage(ExcelFileName)));
-			response.setCharacterEncoding("UTF-8");
-			List<TaskDetail> resourcesTaskDetail = new FourTResultCriteriaService(fourTService)
-					.findTasksBasedOn(resourceTaskDtl);
-			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(resourcesTaskDetail);
-
-			// uses the Super CSV API to generate CSV data from the model data
-			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-
-			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };
-			String[] headerMapping = { "TaskDate", "ResourceName", "TaskDesc", "Duration", "Status" };
-
-			csvWriter.writeHeader(header);
-
-			for (ResourceTaskDetail savedResourceTaskDtl : resourceTaskDetails) {
-				csvWriter.write(savedResourceTaskDtl, headerMapping);
-			}
-			csvWriter.close();
-		} catch (FourTServiceException | IOException fse) {
+			FourTFileWriterService fourTFileWriterService = new FourTFileWriterServiceImpl<TaskDetail>(
+					new FourTCSVDataFileExporter(request, response, resourceTaskDtl).withFourTConverter(fourTConverter), fourTVetoService);
+			fourTFileWriterService.exportDataAsFile();
+		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(fse.getMessage());
 		}
@@ -154,31 +124,11 @@ public class FourTLandingController {
 	public void customViewTaskDetails(@ModelAttribute("resourceTaskDetailForm") ResourceTaskDetail resourceTaskDtl,
 			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
-		List<Object[]> resultList = Lists.newArrayList();
 		try {
-			RequestContext requestContext = new RequestContext(request);
-			response.setContentType("text/plain");
-			response.setHeader("Content-Disposition",
-					String.format("attachment; filename=\"%s\"", requestContext.getMessage(TxtFileName)));
-			response.setCharacterEncoding("UTF-8");
-
-			if (isEmpty(resourceTaskDtl.getCustomQuery())) {
-				response.getWriter().write(requestContext.getMessage(EmptyCustomQueryString));
-			} else {
-				resultList = fourTReadOnlyService.findCustomTaskResults(resourceTaskDtl.getCustomQuery());
-				if (resultList.isEmpty()) {
-					response.getWriter().write(requestContext.getMessage(NoResultString));
-				}
-				for (Object[] objects : resultList) {
-					String row = "";
-					for (Object obj : objects) {
-						row = row.concat(obj.toString()).concat("\t");
-					}
-					response.getWriter().write(row);
-					response.getWriter().println();
-				}
-			}
-		} catch (IOException | FourTServiceException fse) {
+			FourTFileWriterService fourTFileWriterService = new FourTFileWriterServiceImpl<Object[]>(
+					new FourTPlainTextDataFileExporter(request, response, resourceTaskDtl), fourTReadOnlyService);
+			fourTFileWriterService.exportDataAsFile();
+		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(
 					"FourTServiceException - Some error occurred. Please note: Custom Query is set to execute read-only queries only");
@@ -186,11 +136,12 @@ public class FourTLandingController {
 	}
 
 	@RequestMapping(value = "/landing/fourTDBManagerTool.go")
+	@Deprecated
 	public void dbManagerTool(ModelMap model, HttpServletResponse response) {
 		log.debug("Entering dbManagerTool() in the FourTLandingController");
 		try {
-			FourTDBManager<DatabaseManagerSwing> fourTDBManager = new FourTDBManagerService(DatabaseManagerSwing.class,
-					"main", new String[] { "--url", "jdbc:hsqldb:mem:fourtdb", "--user", "sa", "--password", "" });
+			FourTDBManager fourTDBManager = new FourTDBManagerService(DatabaseManagerSwing.class, "main",
+					new String[] { "--url", "jdbc:hsqldb:mem:fourtdb", "--user", "sa", "--password", "" });
 			fourTDBManager.runDBManagerTool();
 		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());

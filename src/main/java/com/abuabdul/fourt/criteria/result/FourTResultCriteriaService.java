@@ -8,7 +8,7 @@ import com.abuabdul.fourt.criteria.predicate.FourTPredicateServiceImpl;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
-import com.abuabdul.fourt.service.FourTService;
+import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
  * @author abuabdul
@@ -16,22 +16,22 @@ import com.abuabdul.fourt.service.FourTService;
  */
 public class FourTResultCriteriaService implements FourTResultCriteria {
 
-	private final FourTService fourTService;
+	private final FourTVetoService fourTVetoService;
 
-	public FourTResultCriteriaService(FourTService fourTService) {
-		this.fourTService = fourTService;
+	public FourTResultCriteriaService(FourTVetoService fourTService) {
+		this.fourTVetoService = fourTService;
 	}
 
 	@Override
 	public List<TaskDetail> findTasksBasedOn(ResourceTaskDetail resourceTaskDtl) throws FourTServiceException {
-		return new FourTResourceTaskCriteriaBuilder(fourTService)
+		return new FourTResourceTaskCriteriaBuilder(fourTVetoService)
 				.withInputResourceTaskDetail(resourceTaskDtl)
 				.withPredicateService(new FourTPredicateServiceImpl())
 				.addResourceNameCriteria()
 				.addTaskDateCriteria()
 				.addTaskDurationCriteria()
 				.addTaskStatusCriteria()
-				.withDefaultCriteria(new FourTSelectAllTaskDetailCriteria(fourTService))
+				.withDefaultCriteria(new FourTSelectAllTaskDetailCriteria(fourTVetoService))
 				.executeCriteria();
 	}
 

@@ -19,7 +19,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "RESOURCE")
-//@NamedQuery(name="Resource.findAll", query="select r from Resource r")
 public class Resource {
 
 	@Id

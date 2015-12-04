@@ -17,9 +17,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 @Configuration
 public class FourTConfig {
 
-	@Value("${fourt.db.script.classpath.location}")
-	protected String dbScript;
-
 	@Value("${fourt.tasktracker.db.name}")
 	protected String taskTrackerDBName;
 

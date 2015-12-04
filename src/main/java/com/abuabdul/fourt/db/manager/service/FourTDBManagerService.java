@@ -9,11 +9,16 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-public class FourTDBManagerService extends FourTAbstractDBManager<DatabaseManagerSwing>
-		implements FourTDBManager<DatabaseManagerSwing> {
+public class FourTDBManagerService implements FourTDBManager {
+
+	private final Class<DatabaseManagerSwing> dbmanagerClass;
+	private final String mainMethod;
+	private final String[] args;
 
 	public FourTDBManagerService(Class<DatabaseManagerSwing> dbmanagerClass, String mainMethod, String[] args) {
-		super(dbmanagerClass, mainMethod, args);
+		this.dbmanagerClass = dbmanagerClass;
+		this.mainMethod = mainMethod;
+		this.args = args;
 	}
 
 	@Override

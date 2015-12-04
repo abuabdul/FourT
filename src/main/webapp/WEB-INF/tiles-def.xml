@@ -25,18 +25,9 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/fourTCustomView.jsp" />
 	</definition>
 	
-	<definition name="resource/task/failure" extends="base.definition">
-		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
-	</definition>
-	
-	<definition name="resource/task/success" extends="base.definition">
-		<put-attribute name="body" value="/WEB-INF/jsp/fourTOverview.jsp" />
-	</definition>
-	
 	<!-- Error page views start -->
 	<definition name="generic/error" extends="base.definition">
 		<put-attribute name="body" value="/WEB-INF/jsp/errors/errorPage.jsp" />
 	</definition>
-	
 	<!-- Error page views end -->
 </tiles-definitions>

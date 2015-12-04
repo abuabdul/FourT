@@ -22,7 +22,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  */
 @Service
 @Transactional(value="transactionManager")
-public class FourTServiceImpl implements FourTService {
+public class FourTVetoServiceImpl implements FourTVetoService {
 
 	@Autowired
 	private FourTResourceDAO fourTResourceDAO;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
-import com.abuabdul.fourt.service.FourTService;
+import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
  * Criteria to find Results for All Task Details
@@ -14,9 +14,9 @@ import com.abuabdul.fourt.service.FourTService;
  */
 public class FourTSelectAllTaskDetailCriteria implements FourTDefaultCriteria<TaskDetail> {
 
-	private final FourTService fourTService;
+	private final FourTVetoService fourTService;
 
-	public FourTSelectAllTaskDetailCriteria(FourTService fourTService) {
+	public FourTSelectAllTaskDetailCriteria(FourTVetoService fourTService) {
 		this.fourTService = fourTService;
 	}
 

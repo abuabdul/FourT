@@ -7,7 +7,7 @@ $(function() {
 		$("#wrapper").toggleClass("toggled");
 	});
 
-	 var tasktracker = $('#tasktracker').DataTable( {
+	var tasktracker = $('#tasktracker').DataTable( {
 	        "columnDefs": [ {
 	            "searchable": false,
 	            "orderable": false,
@@ -16,9 +16,9 @@ $(function() {
 	        "order": [[ 1, 'asc' ], [ 2, 'asc' ]]
 	    } );
 	 
-	    tasktracker.on( 'order.dt search.dt', function () {
+	tasktracker.on( 'order.dt search.dt', function () {
 	        tasktracker.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
 	            cell.innerHTML = i+1;
 	        } );
-	    } ).draw();
+	} ).draw();
 });

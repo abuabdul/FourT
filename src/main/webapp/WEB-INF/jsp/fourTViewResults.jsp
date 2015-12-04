@@ -41,7 +41,7 @@
                                     </div>   
                                  </div>
                                 <div class="form-group">
-                                    <div class="col-xs-12 col-sm-8 col-md-5">
+                                     <div class="col-xs-12 col-sm-8 col-md-5">
                                         <form:select class="form-control" path="status">
 	                                         <form:option value="">Task Status</form:option>
 	                                         <form:option value="In Analysis">In Analysis</form:option>
@@ -65,12 +65,18 @@
 							</div>
 						</c:if>			
 						<c:if test="${not empty resourceTaskDetails}">
-						    <c:url var="exportTaskResultsUrl" value="/secure/taskdetails/fourTExportToExcel.go"/>
 							<div class="table-responsive padding-3px">
 							    <div class="page-header">
 	  								<h2><small>Results based on above filters:</small></h2>
-	  								<h4><small><a href="${exportTaskResultsUrl}"><i class="fa fa-file-excel-o"></i> Export To Excel</a></small></h4>
-								</div>
+	  								<c:url var="exportTaskResultsUrl" value="/secure/taskdetails/fourTExportToExcel.go"/>
+									<form:form modelAttribute="resourceTaskDetailForm" action="${exportTaskResultsUrl}" method="post">
+                                        <form:hidden path="resourceName"/>
+                                        <form:hidden path="taskDate"/>
+                                        <form:hidden path="duration"/>
+                                        <form:hidden path="status"/>
+										<button type="submit" class="btn btn-primary btn-xs">Export To Excel &nbsp; <span class="glyphicon glyphicon-export" aria-hidden="true"></span></button>
+									</form:form>
+   							    </div>
 								<table id="tasktracker" class="table table-striped table-bordered">
 									   <thead>
 									 		<tr>

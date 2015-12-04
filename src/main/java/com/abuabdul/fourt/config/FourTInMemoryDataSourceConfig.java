@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hsqldb.util.DatabaseManagerSwing;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,10 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 @Profile("dev")
 public class FourTInMemoryDataSourceConfig extends FourTConfig {
 
-	@Bean(name = "embeddedDatabase")
+	@Value("${fourt.db.script.classpath.location}")
+	protected String dbScript;
+
+	@Bean
 	public EmbeddedDatabase embeddedDatabase() {
 		return new EmbeddedDatabaseBuilder().setName(taskTrackerDBName).setType(EmbeddedDatabaseType.HSQL)
 				.addScript(dbScript).build();
@@ -64,23 +68,14 @@ public class FourTInMemoryDataSourceConfig extends FourTConfig {
 		return datasource;
 	}
 
-	@Bean(name = "entityManager")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
 		entityManagerFactory.setPersistenceUnitName("allPrivileges");
-		/*
-		 * If JpaVendorAdapter is set, persistence xml is not needed
-		 * 
-		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation(
-		 * "classpath:META-INF/persistence.xml");
-		 * 
-		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		// Need to specify when entity class is not specified in persistence.xml
 		entityManagerFactory.setPackagesToScan(packagesToScan);
 		return entityManagerFactory;
 	}
@@ -111,23 +106,14 @@ public class FourTInMemoryDataSourceConfig extends FourTConfig {
 		return datasource;
 	}
 
-	@Bean(name = "readOnlyEntityManager")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean readOnlyEntityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(readOnlyDataSource());
 		entityManagerFactory.setPersistenceUnitName("readOnly");
-		/*
-		 * If JpaVendorAdapter is set, persistence xml is not needed
-		 * 
-		 * entityManagerFactory.setPersistenceUnitName("fourtunit");
-		 * entityManagerFactory.setPersistenceXmlLocation(
-		 * "classpath:META-INF/persistence.xml");
-		 * 
-		 */
 		entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
 		entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
 		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		// Need to specify when entity class is not specified in persistence.xml
 		entityManagerFactory.setPackagesToScan(packagesToScan);
 		return entityManagerFactory;
 	}

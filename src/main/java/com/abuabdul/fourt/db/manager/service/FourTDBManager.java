@@ -2,7 +2,7 @@ package com.abuabdul.fourt.db.manager.service;
 
 import com.abuabdul.fourt.exception.FourTServiceException;
 
-public interface FourTDBManager<T> {
+public interface FourTDBManager {
 
 	void runDBManagerTool() throws FourTServiceException;
 
