@@ -30,4 +30,7 @@ public class FourTByResourceTaskStatusCriteria extends FourTAbstractCriteria<Tas
 		return p;
 	}
 
+	public String getByTaskStatus() {
+		return byTaskStatus;
+	}
 }

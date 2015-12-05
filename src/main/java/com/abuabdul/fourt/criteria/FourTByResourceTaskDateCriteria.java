@@ -35,4 +35,7 @@ public class FourTByResourceTaskDateCriteria extends FourTAbstractCriteria<TaskD
 		return p;
 	}
 
+	public Date getByTaskDate() {
+		return byTaskDate;
+	}
 }

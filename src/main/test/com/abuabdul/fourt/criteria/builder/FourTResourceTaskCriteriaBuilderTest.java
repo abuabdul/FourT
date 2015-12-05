@@ -1,8 +1,9 @@
 package com.abuabdul.fourt.criteria.builder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -17,13 +18,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hamcrest.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
 
+import com.abuabdul.fourt.criteria.FourTByResourceNameCriteria;
 import com.abuabdul.fourt.criteria.FourTCriteria;
 import com.abuabdul.fourt.criteria.fallback.FourTDefaultCriteria;
 import com.abuabdul.fourt.criteria.predicate.FourTPredicateService;
@@ -69,7 +70,7 @@ public class FourTResourceTaskCriteriaBuilderTest {
 
 	private List<TaskDetail> resultLists = Lists.newArrayList(new TaskDetail());
 	private List<FourTCriteria<TaskDetail>> criteriaList = Lists.newArrayList();
-	
+
 	@BeforeMethod
 	public void initAndStubMocks() throws FourTServiceException {
 		MockitoAnnotations.initMocks(this);
@@ -96,7 +97,7 @@ public class FourTResourceTaskCriteriaBuilderTest {
 				.withDefaultCriteria(fourTDefaultCriteria).executeCriteria();
 
 		verify(fourTDefaultCriteria, times(1)).defaultSelectAllCriteria();
-		
+
 		assertThat(taskDetails, hasSize(1));
 		assertThat(taskDetails, equalTo(resultLists));
 
@@ -105,7 +106,7 @@ public class FourTResourceTaskCriteriaBuilderTest {
 		verify(fourTPredicateService, never()).whereClauseAndSelect(criteriaQuery, finalPredicate, root);
 		verify(fourTVetoService, never()).findTaskDetailByCriteriaQuery(criteriaQuery);
 		assertThat(criteriaList, empty());
-		
+
 		// Reset the criteria after every test
 		criteriaList = Lists.newArrayList();
 	}
@@ -125,10 +126,39 @@ public class FourTResourceTaskCriteriaBuilderTest {
 		verify(fourTPredicateService, times(1)).applyOROnPredicates(criteriaBuilder, allPredicates);
 		verify(fourTPredicateService, times(1)).whereClauseAndSelect(criteriaQuery, finalPredicate, root);
 		verify(fourTVetoService, times(1)).findTaskDetailByCriteriaQuery(criteriaQuery);
-	
+
 		assertThat(taskDetails, hasSize(1));
 		assertThat(taskDetails, equalTo(resultLists));
 		assertThat(criteriaList, hasSize(4));
+
+		verify(fourTDefaultCriteria, never()).defaultSelectAllCriteria();
+
+		// Reset the criteria after every test
+		criteriaList = Lists.newArrayList();
+	}
+
+	@Test(groups = "integration")
+	public void testResourceCriteriaBuilderForResourceNameCriteria() throws FourTServiceException {
+		// build ResourceTaskDetail for all criteria
+		ResourceTaskDetail resourceTaskDtl = new ResourceTaskDetailBuilder().withOnlyResourceNameCriteria("Abu")
+				.build();
+
+		List<TaskDetail> taskDetails = new FourTResourceTaskCriteriaBuilder(fourTVetoService, criteriaList)
+				.withInputResourceTaskDetail(resourceTaskDtl).withPredicateService(fourTPredicateService)
+				.addResourceNameCriteria().addTaskDateCriteria().addTaskDurationCriteria().addTaskStatusCriteria()
+				.withDefaultCriteria(fourTDefaultCriteria).executeCriteria();
+
+		verify(fourTPredicateService, times(1)).generateCriteriaPredicates(criteriaList);
+		verify(fourTPredicateService, times(1)).applyOROnPredicates(criteriaBuilder, allPredicates);
+		verify(fourTPredicateService, times(1)).whereClauseAndSelect(criteriaQuery, finalPredicate, root);
+		verify(fourTVetoService, times(1)).findTaskDetailByCriteriaQuery(criteriaQuery);
+
+		assertThat(taskDetails, equalTo(resultLists));
+		assertThat(taskDetails, hasSize(1));
+		assertThat(criteriaList, hasSize(1));
+		assertThat(criteriaList.get(0), instanceOf(FourTByResourceNameCriteria.class));
+		FourTByResourceNameCriteria resourceNameCriteria = (FourTByResourceNameCriteria) criteriaList.get(0);
+		assertThat(resourceNameCriteria.getByResourceName(), equalTo("Abu"));
 
 		verify(fourTDefaultCriteria, never()).defaultSelectAllCriteria();
 

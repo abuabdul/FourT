@@ -32,4 +32,8 @@ public class FourTByResourceNameCriteria extends FourTAbstractCriteria<TaskDetai
 		return p;
 	}
 
+	public String getByResourceName() {
+		return byResourceName;
+	}
+	
 }

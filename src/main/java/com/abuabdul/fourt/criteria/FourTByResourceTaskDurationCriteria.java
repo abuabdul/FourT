@@ -30,4 +30,7 @@ public class FourTByResourceTaskDurationCriteria extends FourTAbstractCriteria<T
 		return p;
 	}
 
+	public Float getByTaskDuration() {
+		return byTaskDuration;
+	}
 }
