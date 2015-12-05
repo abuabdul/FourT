@@ -20,9 +20,6 @@ import com.google.common.collect.Lists;
  */
 public class FourTPredicateServiceImpl implements FourTPredicateService<TaskDetail> {
 
-	public FourTPredicateServiceImpl() {
-	}
-
 	@Override
 	public List<Predicate> generateCriteriaPredicates(List<FourTCriteria<TaskDetail>> criteriaList) {
 		List<Predicate> allPredicates = Lists.newArrayList();

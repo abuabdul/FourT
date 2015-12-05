@@ -22,7 +22,8 @@
 					<c:url var="resourceTaskTrackerDetailsUrl" value="/secure/resource/viewCustomTaskDetails.go" />
 					<form:form id="resourceTaskTrackerForm" class="form-horizontal" role="form" modelAttribute="resourceTaskDetailForm" action="${resourceTaskTrackerDetailsUrl}" method="post">
 						<div class="form-group">
-							<label for="forTaskDetail" class="col-sm-4 control-label">Custom SQL Query</label>
+							<label for="forTaskDetail" class="col-sm-4 control-label">Custom SQL Query<br/>
+							<span class="text-danger"><small>** (query cannot update or insert data)</small></span></label>
 							<div class="col-xs-12 col-sm-8 col-md-5">
 								<form:textarea class="form-control customQueryDetails" rows="5" path="customQuery" placeholder="Write SQL Query to find task details" />
 							</div>
