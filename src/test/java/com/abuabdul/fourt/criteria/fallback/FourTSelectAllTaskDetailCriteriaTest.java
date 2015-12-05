@@ -25,7 +25,7 @@ public class FourTSelectAllTaskDetailCriteriaTest {
 	public void testDefaultSelectAllCriteria() throws FourTServiceException {
 		FourTDefaultCriteria<TaskDetail> fourTDefaultCriteria = new FourTSelectAllTaskDetailCriteria(
 				fourTVetoService);
-		//fourTDefaultCriteria.defaultSelectAllCriteria();
+		fourTDefaultCriteria.defaultSelectAllCriteria();
 
 		verify(fourTVetoService).findAllTaskDetails();
 	}
