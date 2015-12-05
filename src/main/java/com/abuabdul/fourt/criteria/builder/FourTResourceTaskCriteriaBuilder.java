@@ -23,7 +23,6 @@ import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.service.FourTVetoService;
-import com.google.common.collect.Lists;
 
 /**
  * @author abuabdul
@@ -32,7 +31,7 @@ import com.google.common.collect.Lists;
 public class FourTResourceTaskCriteriaBuilder {
 
 	private final ResourceTaskDetail emptyResourceTaskDtl = new ResourceTaskDetail();
-	private final List<FourTCriteria<TaskDetail>> criteriaList = Lists.newArrayList();
+	private final List<FourTCriteria<TaskDetail>> criteriaList;
 	private final FourTVetoService fourTService;
 	private final CriteriaBuilder criteriaBuilder;
 	private final CriteriaQuery<TaskDetail> criteriaQuery;
@@ -42,11 +41,13 @@ public class FourTResourceTaskCriteriaBuilder {
 	private FourTDefaultCriteria<TaskDetail> fourTDefaultCriteria;
 	private FourTPredicateService<TaskDetail> predicateService;
 
-	public FourTResourceTaskCriteriaBuilder(FourTVetoService fourTService) {
+	public FourTResourceTaskCriteriaBuilder(FourTVetoService fourTService,
+			List<FourTCriteria<TaskDetail>> criteriaList) {
 		this.fourTService = fourTService;
 		this.criteriaBuilder = fourTService.getEntityManager().getCriteriaBuilder();
 		this.criteriaQuery = criteriaBuilder.createQuery(TaskDetail.class);
 		this.root = criteriaQuery.from(TaskDetail.class);
+		this.criteriaList = criteriaList;
 	}
 
 	public FourTResourceTaskCriteriaBuilder withInputResourceTaskDetail(ResourceTaskDetail resourceTaskDetail) {

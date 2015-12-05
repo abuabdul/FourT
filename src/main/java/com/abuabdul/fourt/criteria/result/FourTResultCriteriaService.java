@@ -24,7 +24,7 @@ public class FourTResultCriteriaService implements FourTResultCriteria {
 
 	@Override
 	public List<TaskDetail> findTasksBasedOn(ResourceTaskDetail resourceTaskDtl) throws FourTServiceException {
-		return new FourTResourceTaskCriteriaBuilder(fourTVetoService)
+		return new FourTResourceTaskCriteriaBuilder(fourTVetoService, null)
 				.withInputResourceTaskDetail(resourceTaskDtl)
 				.withPredicateService(new FourTPredicateServiceImpl())
 				.addResourceNameCriteria()

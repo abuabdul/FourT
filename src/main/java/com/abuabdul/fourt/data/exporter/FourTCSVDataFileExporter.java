@@ -85,14 +85,10 @@ public class FourTCSVDataFileExporter implements FourTFileExporter<TaskDetail> {
 	public void writeFetchResults(List<TaskDetail> fetchResults) throws FourTServiceException {
 		try {
 			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(fetchResults);
-			// uses the Super CSV API to generate CSV data from the model data
-			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-
 			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };
 			String[] headerMapping = { "TaskDate", "ResourceName", "TaskDesc", "Duration", "Status" };
-
+			ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 			csvWriter.writeHeader(header);
-
 			for (ResourceTaskDetail resourceTaskDetail : resourceTaskDetails) {
 				csvWriter.write(resourceTaskDetail, headerMapping);
 			}
