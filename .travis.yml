@@ -2,7 +2,7 @@ language: java
 
 install: true
 
-script: mvn clean compile
+script: mvn clean compile test
 
 jdk:
   - oraclejdk7
