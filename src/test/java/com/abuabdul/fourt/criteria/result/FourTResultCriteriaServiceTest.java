@@ -31,10 +31,9 @@ public class FourTResultCriteriaServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test
+	@Test(groups = "integration")
 	public void testFindTasksBasedOnTaskDetail() throws FourTServiceException {
 		List<TaskDetail> taskList = fourTResultCriteria.findTasksBasedOn(resourceTaskDtl);
 		assertThat(taskList, emptyCollectionOf(TaskDetail.class));
 	}
-
 }

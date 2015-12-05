@@ -34,7 +34,7 @@ public class FourTFileWriterServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test
+	@Test(groups = "integration")
 	public void testExportDataAsCSVFile() throws FourTServiceException {
 		List<TaskDetail> fetchResults = Lists.newArrayList();
 
@@ -53,7 +53,7 @@ public class FourTFileWriterServiceTest {
 		verify(fileExporter, never()).writeFetchResults(fetchResults);
 	}
 
-	@Test
+	@Test(groups = "integration")
 	public void testExportDataAsCSVFileWithResults() throws FourTServiceException {
 		List<TaskDetail> fetchResults = Lists.newArrayList();
 		TaskDetail taskDetail = new TaskDetail();
@@ -74,7 +74,7 @@ public class FourTFileWriterServiceTest {
 		verify(fileExporter, times(1)).writeFetchResults(fetchResults);
 	}
 
-	@Test
+	@Test(groups = "integration")
 	public void testExportEmptyDataAsCSVFile() throws FourTServiceException {
 		List<TaskDetail> fetchResults = Lists.newArrayList();
 
@@ -90,6 +90,5 @@ public class FourTFileWriterServiceTest {
 		verify(fileExporter, never()).fetchResults(fourTService);
 		verify(fileExporter, never()).writeIfNoResults();
 		verify(fileExporter, never()).writeFetchResults(fetchResults);
-
 	}
 }
