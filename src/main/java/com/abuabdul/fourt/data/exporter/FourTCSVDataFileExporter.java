@@ -3,7 +3,6 @@ package com.abuabdul.fourt.data.exporter;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.NoSuchMessageException;
@@ -12,77 +11,68 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
+import com.abuabdul.fourt.criteria.result.FourTResultCriteria;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.model.converter.FourTConverter;
-import com.abuabdul.fourt.service.FourTService;
-import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
  * @author abuabdul
  *
  */
-public class FourTCSVDataFileExporter implements FourTFileExporter<TaskDetail> {
+public class FourTCSVDataFileExporter implements FourTFileExporter<ResourceTaskDetail, TaskDetail> {
 
 	private final static String ExcelFileName = "export.excel.file.name";
 
 	private final static String NoResultString = "no.custom.result.message";
 
-	private FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter;
-	protected final RequestContext requestContext;
-	protected final HttpServletResponse response;
-	protected final ResourceTaskDetail taskDetail;
+	private final FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter;
 
-	public FourTCSVDataFileExporter(HttpServletRequest request, HttpServletResponse response,
-			ResourceTaskDetail taskDetail) {
-		this.requestContext = new RequestContext(request);
-		this.response = response;
-		this.taskDetail = taskDetail;
-	}
+	private final FourTResultCriteria fourTResultCriteria;
 
-	public FourTCSVDataFileExporter withFourTConverter(
+	public FourTCSVDataFileExporter(FourTResultCriteria fourTResultCriteria,
 			FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter) {
+		this.fourTResultCriteria = fourTResultCriteria;
 		this.fourTConverter = fourTConverter;
-		return this;
 	}
-	
+
 	@Override
-	public void setExportType() {
+	public void setExportType(HttpServletResponse response, RequestContext context) {
 		response.setContentType("text/csv");
 		response.setHeader("Content-Disposition",
-				String.format("attachment; filename=\"%s\"", requestContext.getMessage(ExcelFileName)));
+				String.format("attachment; filename=\"%s\"", context.getMessage(ExcelFileName)));
 		response.setCharacterEncoding("UTF-8");
 	}
 
 	@Override
-	public boolean isEmptyInput() {
+	public boolean isEmptyInput(ResourceTaskDetail taskDetail) {
 		return false;
 	}
 
 	@Override
-	public void handleEmptyInput() throws FourTServiceException {
+	public void handleEmptyInput(HttpServletResponse response, RequestContext context) throws FourTServiceException {
 	}
 
 	@Override
-	public List<TaskDetail> fetchResults(FourTService fourTService) throws FourTServiceException {
-		return new FourTResultCriteriaService((FourTVetoService) fourTService).findTasksBasedOn(taskDetail);
+	public List<TaskDetail> fetchResults(ResourceTaskDetail taskDetail) throws FourTServiceException {
+		return fourTResultCriteria.findTasksBasedOn(taskDetail);
 	}
 
 	@Override
-	public void writeIfNoResults() throws FourTServiceException {
+	public void writeIfNoResults(HttpServletResponse response, RequestContext context) throws FourTServiceException {
 		try {
-			response.getWriter().write(requestContext.getMessage(NoResultString));
+			response.getWriter().write(context.getMessage(NoResultString));
 		} catch (NoSuchMessageException | IOException e) {
 			throw new FourTServiceException("FourTServiceException - " + e.getMessage());
 		}
 	}
 
 	@Override
-	public void writeFetchResults(List<TaskDetail> fetchResults) throws FourTServiceException {
+	public void writeFetchResults(HttpServletResponse response, List<TaskDetail> fetchResults)
+			throws FourTServiceException {
 		try {
 			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(fetchResults);
 			String[] header = { "Task Date", "Resource Name", "Task Description", "Task Duration", "Task Status" };

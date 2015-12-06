@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.abuabdul.fourt.dao.FourTResourceDAO;
@@ -20,15 +18,17 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-@Service
-@Transactional(value="transactionManager")
+@Transactional(value = "transactionManager")
 public class FourTVetoServiceImpl implements FourTVetoService {
 
-	@Autowired
 	private FourTResourceDAO fourTResourceDAO;
 
-	@Autowired
 	private FourTTaskDetailDAO fourTTaskDetailDAO;
+
+	public FourTVetoServiceImpl(FourTResourceDAO fourTResourceDAO, FourTTaskDetailDAO fourTTaskDetailDAO) {
+		this.fourTResourceDAO = fourTResourceDAO;
+		this.fourTTaskDetailDAO = fourTTaskDetailDAO;
+	}
 
 	@Override
 	public void saveResourceTaskDetails(Resource resource) throws FourTServiceException {

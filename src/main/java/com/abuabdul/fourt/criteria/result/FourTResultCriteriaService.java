@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.abuabdul.fourt.criteria.FourTCriteria;
 import com.abuabdul.fourt.criteria.builder.FourTResourceTaskCriteriaBuilder;
-import com.abuabdul.fourt.criteria.fallback.FourTSelectAllTaskDetailCriteria;
-import com.abuabdul.fourt.criteria.predicate.FourTPredicateServiceImpl;
+import com.abuabdul.fourt.criteria.fallback.FourTDefaultCriteria;
+import com.abuabdul.fourt.criteria.predicate.FourTPredicateService;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
@@ -18,24 +18,28 @@ import com.google.common.collect.Lists;
  */
 public class FourTResultCriteriaService implements FourTResultCriteria {
 
-	private final List<FourTCriteria<TaskDetail>> criteriaList = Lists.newArrayList();
-	
 	private final FourTVetoService fourTVetoService;
+	private final FourTPredicateService<TaskDetail> fourTPredicateService;
+	private final FourTDefaultCriteria<TaskDetail> fourTDefaultCriteria;
 
-	public FourTResultCriteriaService(FourTVetoService fourTService) {
+	public FourTResultCriteriaService(FourTVetoService fourTService,
+			FourTPredicateService<TaskDetail> fourTPredicateService, FourTDefaultCriteria<TaskDetail> fourTDefaultCriteria) {
 		this.fourTVetoService = fourTService;
+		this.fourTPredicateService = fourTPredicateService;
+		this.fourTDefaultCriteria = fourTDefaultCriteria;
 	}
 
 	@Override
 	public List<TaskDetail> findTasksBasedOn(ResourceTaskDetail resourceTaskDtl) throws FourTServiceException {
+		final List<FourTCriteria<TaskDetail>> criteriaList = Lists.newArrayList();
 		return new FourTResourceTaskCriteriaBuilder(fourTVetoService, criteriaList)
 				.withInputResourceTaskDetail(resourceTaskDtl)
-				.withPredicateService(new FourTPredicateServiceImpl())
+				.withPredicateService(fourTPredicateService)
 				.addResourceNameCriteria()
 				.addTaskDateCriteria()
 				.addTaskDurationCriteria()
 				.addTaskStatusCriteria()
-				.withDefaultCriteria(new FourTSelectAllTaskDetailCriteria(fourTVetoService))
+				.withDefaultCriteria(fourTDefaultCriteria)
 				.executeCriteria();
 	}
 

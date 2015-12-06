@@ -7,8 +7,6 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTException;
@@ -23,8 +21,10 @@ import com.google.common.collect.Lists;
  * @author abuabdul
  *
  */
-@Component
 public class FourTConverterService implements FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> {
+
+	public FourTConverterService() {
+	}
 
 	@Override
 	public Resource convert(ResourceTask resourceTask) throws FourTException {

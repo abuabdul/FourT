@@ -5,8 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.springframework.stereotype.Repository;
-
 import com.abuabdul.fourt.dao.FourTBaseDAO;
 import com.abuabdul.fourt.dao.FourTTaskDetailDAO;
 import com.abuabdul.fourt.domain.TaskDetail;
@@ -16,8 +14,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-@Repository
-public class FourTTaskDetailDAOImpl extends FourTBaseDAO<TaskDetail, Long>implements FourTTaskDetailDAO {
+public class FourTTaskDetailDAOImpl extends FourTBaseDAO<TaskDetail, Long> implements FourTTaskDetailDAO {
 
 	@Override
 	public EntityManager getEntityManager() {

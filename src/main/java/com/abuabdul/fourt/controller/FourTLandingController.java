@@ -13,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.support.RequestContext;
 
-import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
-import com.abuabdul.fourt.data.exporter.FourTCSVDataFileExporter;
+import com.abuabdul.fourt.criteria.result.FourTResultCriteria;
 import com.abuabdul.fourt.data.exporter.FourTFileWriterService;
-import com.abuabdul.fourt.data.exporter.FourTFileWriterServiceImpl;
-import com.abuabdul.fourt.data.exporter.FourTPlainTextDataFileExporter;
 import com.abuabdul.fourt.db.manager.service.FourTDBManager;
 import com.abuabdul.fourt.db.manager.service.FourTDBManagerService;
 import com.abuabdul.fourt.domain.Resource;
@@ -28,7 +26,6 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.model.converter.FourTConverter;
-import com.abuabdul.fourt.service.FourTReadOnlyService;
 import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
@@ -49,7 +46,13 @@ public class FourTLandingController {
 	private FourTVetoService fourTVetoService;
 
 	@Autowired
-	private FourTReadOnlyService fourTReadOnlyService;
+	private FourTResultCriteria fourTResultCriteria;
+
+	@Autowired
+	private FourTFileWriterService<ResourceTaskDetail> fourTCSVFileWriterService;
+
+	@Autowired
+	private FourTFileWriterService<ResourceTaskDetail> fourTTextFileWriterService;
 
 	@RequestMapping(value = "/landing/fourTOverview.go")
 	public String landingPage(ModelMap model) {
@@ -87,8 +90,7 @@ public class FourTLandingController {
 			ModelMap model) {
 		log.debug("Entering viewTaskResults() in the FourTLandingController");
 		try {
-			List<TaskDetail> savedTaskDetail = new FourTResultCriteriaService(fourTVetoService)
-					.findTasksBasedOn(resourceTaskDtl);
+			List<TaskDetail> savedTaskDetail = fourTResultCriteria.findTasksBasedOn(resourceTaskDtl);
 			List<ResourceTaskDetail> resourceTaskDetails = fourTConverter.convert(savedTaskDetail);
 			model.addAttribute("resourceTaskDetails", resourceTaskDetails);
 			model.addAttribute("resourceTaskDetailForm", resourceTaskDtl);
@@ -104,9 +106,7 @@ public class FourTLandingController {
 			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Entering exportTaskResultToExcel() in the FourTLandingController");
 		try {
-			FourTFileWriterService fourTFileWriterService = new FourTFileWriterServiceImpl<TaskDetail>(
-					new FourTCSVDataFileExporter(request, response, resourceTaskDtl).withFourTConverter(fourTConverter), fourTVetoService);
-			fourTFileWriterService.exportDataAsFile();
+			fourTCSVFileWriterService.exportDataAsFile(new RequestContext(request), response, resourceTaskDtl);
 		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(fse.getMessage());
@@ -125,9 +125,7 @@ public class FourTLandingController {
 			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Entering customViewTaskDetails() in the FourTLandingController");
 		try {
-			FourTFileWriterService fourTFileWriterService = new FourTFileWriterServiceImpl<Object[]>(
-					new FourTPlainTextDataFileExporter(request, response, resourceTaskDtl), fourTReadOnlyService);
-			fourTFileWriterService.exportDataAsFile();
+			fourTTextFileWriterService.exportDataAsFile(new RequestContext(request), response, resourceTaskDtl);
 		} catch (FourTServiceException fse) {
 			log.debug("FourTServiceException - " + fse.getMessage());
 			throw new FourTException(

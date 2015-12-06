@@ -8,6 +8,34 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import com.abuabdul.fourt.criteria.fallback.FourTDefaultCriteria;
+import com.abuabdul.fourt.criteria.fallback.FourTSelectAllTaskDetailCriteria;
+import com.abuabdul.fourt.criteria.predicate.FourTPredicateService;
+import com.abuabdul.fourt.criteria.predicate.FourTPredicateServiceImpl;
+import com.abuabdul.fourt.criteria.result.FourTResultCriteria;
+import com.abuabdul.fourt.criteria.result.FourTResultCriteriaService;
+import com.abuabdul.fourt.dao.FourTReadOnlyDBDAO;
+import com.abuabdul.fourt.dao.FourTResourceDAO;
+import com.abuabdul.fourt.dao.FourTTaskDetailDAO;
+import com.abuabdul.fourt.dao.impl.FourTReadOnlyDBDAOImpl;
+import com.abuabdul.fourt.dao.impl.FourTResourceDAOImpl;
+import com.abuabdul.fourt.dao.impl.FourTTaskDetailDAOImpl;
+import com.abuabdul.fourt.data.exporter.FourTCSVDataFileExporter;
+import com.abuabdul.fourt.data.exporter.FourTFileExporter;
+import com.abuabdul.fourt.data.exporter.FourTFileWriterService;
+import com.abuabdul.fourt.data.exporter.FourTFileWriterServiceImpl;
+import com.abuabdul.fourt.data.exporter.FourTPlainTextDataFileExporter;
+import com.abuabdul.fourt.domain.Resource;
+import com.abuabdul.fourt.domain.TaskDetail;
+import com.abuabdul.fourt.model.ResourceTask;
+import com.abuabdul.fourt.model.ResourceTaskDetail;
+import com.abuabdul.fourt.model.converter.FourTConverter;
+import com.abuabdul.fourt.model.converter.FourTConverterService;
+import com.abuabdul.fourt.service.FourTReadOnlyService;
+import com.abuabdul.fourt.service.FourTReadOnlyServiceImpl;
+import com.abuabdul.fourt.service.FourTVetoService;
+import com.abuabdul.fourt.service.FourTVetoServiceImpl;
+
 /**
  * FourT Application Configuration
  * 
@@ -83,4 +111,68 @@ public class FourTConfig {
 		return hibernateJpaVendorAdapter;
 	}
 
+	@Bean
+	public FourTResultCriteria fourTResultCriteria() {
+		return new FourTResultCriteriaService(fourTVetoService(), fourTPredicateService(), fourTDefaultCriteria());
+	}
+
+	@Bean
+	public FourTPredicateService<TaskDetail> fourTPredicateService() {
+		return new FourTPredicateServiceImpl();
+	}
+
+	@Bean
+	public FourTDefaultCriteria<TaskDetail> fourTDefaultCriteria() {
+		return new FourTSelectAllTaskDetailCriteria(fourTVetoService());
+	}
+
+	@Bean
+	public FourTVetoService fourTVetoService() {
+		return new FourTVetoServiceImpl(fourTResourceDAO(), fourTTaskDetailDAO());
+	}
+
+	@Bean
+	public FourTTaskDetailDAO fourTTaskDetailDAO() {
+		return new FourTTaskDetailDAOImpl();
+	}
+
+	@Bean
+	public FourTResourceDAO fourTResourceDAO() {
+		return new FourTResourceDAOImpl();
+	}
+
+	@Bean
+	public FourTReadOnlyService fourTReadOnlyService() {
+		return new FourTReadOnlyServiceImpl(fourTReadOnlyDBDAO());
+	}
+
+	@Bean
+	public FourTReadOnlyDBDAO fourTReadOnlyDBDAO() {
+		return new FourTReadOnlyDBDAOImpl();
+	}
+
+	@Bean
+	public FourTFileWriterService<ResourceTaskDetail> fourTCSVFileWriterService() {
+		return new FourTFileWriterServiceImpl<ResourceTaskDetail, TaskDetail>(csvFileExporter());
+	}
+
+	@Bean
+	public FourTFileWriterService<ResourceTaskDetail> fourTTextFileWriterService() {
+		return new FourTFileWriterServiceImpl<ResourceTaskDetail, Object[]>(textFileExporter());
+	}
+
+	@Bean
+	public FourTFileExporter<ResourceTaskDetail, TaskDetail> csvFileExporter() {
+		return new FourTCSVDataFileExporter(fourTResultCriteria(), fourTConverterService());
+	}
+
+	@Bean
+	public FourTFileExporter<ResourceTaskDetail, Object[]> textFileExporter() {
+		return new FourTPlainTextDataFileExporter(fourTReadOnlyService());
+	}
+
+	@Bean
+	public FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverterService() {
+		return new FourTConverterService();
+	}
 }

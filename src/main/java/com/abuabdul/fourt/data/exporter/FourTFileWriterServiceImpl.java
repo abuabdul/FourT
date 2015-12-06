@@ -4,38 +4,40 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.support.RequestContext;
+
 import com.abuabdul.fourt.exception.FourTServiceException;
-import com.abuabdul.fourt.service.FourTService;
 
 /**
  * @author abuabdul
  *
  */
-public class FourTFileWriterServiceImpl<U> implements FourTFileWriterService {
+public class FourTFileWriterServiceImpl<U, V> implements FourTFileWriterService<U> {
 
-	private final FourTFileExporter<U> fileExporter;
-	private final FourTService fourTService;
+	private final FourTFileExporter<U, V> fileExporter;
 
-	public FourTFileWriterServiceImpl(FourTFileExporter<U> fileExporter, FourTService fourTService) {
+	public FourTFileWriterServiceImpl(FourTFileExporter<U, V> fileExporter) {
 		this.fileExporter = fileExporter;
-		this.fourTService = fourTService;
 	}
 
 	@Override
-	public void exportDataAsFile() throws FourTServiceException {
-		fileExporter.setExportType();
+	public void exportDataAsFile(RequestContext context, HttpServletResponse response, U u)
+			throws FourTServiceException {
+		fileExporter.setExportType(response, context);
 
-		if (fileExporter.isEmptyInput()) {
-			fileExporter.handleEmptyInput();
+		if (fileExporter.isEmptyInput(u)) {
+			fileExporter.handleEmptyInput(response, context);
 			return;
 		}
 
-		List<U> fetchResults = fileExporter.fetchResults(fourTService);
+		List<V> fetchResults = fileExporter.fetchResults(u);
 		if (isEmpty(fetchResults)) {
-			fileExporter.writeIfNoResults();
+			fileExporter.writeIfNoResults(response, context);
 			return;
 		}
 
-		fileExporter.writeFetchResults(fetchResults);
+		fileExporter.writeFetchResults(response, fetchResults);
 	}
 }

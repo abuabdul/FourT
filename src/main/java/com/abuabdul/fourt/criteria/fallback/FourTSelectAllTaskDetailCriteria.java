@@ -14,15 +14,15 @@ import com.abuabdul.fourt.service.FourTVetoService;
  */
 public class FourTSelectAllTaskDetailCriteria implements FourTDefaultCriteria<TaskDetail> {
 
-	private final FourTVetoService fourTService;
+	private final FourTVetoService fourTVetoService;
 
-	public FourTSelectAllTaskDetailCriteria(FourTVetoService fourTService) {
-		this.fourTService = fourTService;
+	public FourTSelectAllTaskDetailCriteria(FourTVetoService fourTVetoService) {
+		this.fourTVetoService = fourTVetoService;
 	}
 
 	@Override
 	public List<TaskDetail> defaultSelectAllCriteria() throws FourTServiceException {
-		return fourTService.findAllTaskDetails();
+		return fourTVetoService.findAllTaskDetails();
 	}
 
 }

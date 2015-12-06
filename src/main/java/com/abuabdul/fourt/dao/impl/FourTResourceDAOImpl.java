@@ -7,8 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.springframework.stereotype.Repository;
-
 import com.abuabdul.fourt.dao.FourTBaseDAO;
 import com.abuabdul.fourt.dao.FourTResourceDAO;
 import com.abuabdul.fourt.domain.Resource;
@@ -18,7 +16,6 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-@Repository
 public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements FourTResourceDAO {
 
 	@Override
