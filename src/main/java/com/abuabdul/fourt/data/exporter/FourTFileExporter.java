@@ -27,7 +27,8 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 /**
  * @author abuabdul
  *
- * @param <T>
+ * @param <U>
+ * @param <V>
  */
 public interface FourTFileExporter<U, V> {
 

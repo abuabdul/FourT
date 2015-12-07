@@ -20,6 +20,14 @@ import java.util.List;
 
 import com.abuabdul.fourt.exception.FourTException;
 
+/**
+ * @author abuabdul
+ *
+ * @param <RT>
+ * @param <R>
+ * @param <TD>
+ * @param <RTDL>
+ */
 public interface FourTConverter<RT, R, TD, RTDL> {
 
 	public R convert(RT model) throws FourTException;

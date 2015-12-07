@@ -30,6 +30,10 @@ import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.service.FourTVetoServiceImpl;
 
+/**
+ * @author abuabdul
+ *
+ */
 public class FourTSelectAllTaskDetailCriteriaTest {
 
 	@Mock

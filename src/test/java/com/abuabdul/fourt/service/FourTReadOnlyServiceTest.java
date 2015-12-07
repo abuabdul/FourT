@@ -27,6 +27,10 @@ import org.testng.annotations.Test;
 import com.abuabdul.fourt.dao.FourTReadOnlyDBDAO;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
+/**
+ * @author abuabdul
+ *
+ */
 public class FourTReadOnlyServiceTest {
 
 	@Mock

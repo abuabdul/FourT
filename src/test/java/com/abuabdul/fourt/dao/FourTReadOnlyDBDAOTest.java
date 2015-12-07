@@ -37,6 +37,10 @@ import org.testng.collections.Lists;
 import com.abuabdul.fourt.dao.impl.FourTReadOnlyDBDAOImpl;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
+/**
+ * @author abuabdul
+ *
+ */
 public class FourTReadOnlyDBDAOTest {
 
 	@Spy

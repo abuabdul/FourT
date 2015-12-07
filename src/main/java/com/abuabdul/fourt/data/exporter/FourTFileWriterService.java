@@ -25,6 +25,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 /**
  * @author abuabdul
  *
+ * @param <U>
  */
 public interface FourTFileWriterService<U> {
 
