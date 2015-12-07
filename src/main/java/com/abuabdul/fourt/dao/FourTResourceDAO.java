@@ -32,6 +32,4 @@ public interface FourTResourceDAO {
 
 	public List<Resource> findResourceByTaskDurationGreaterThan(Float taskDuration) throws FourTServiceException;
 
-	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException;
-
 }

@@ -31,5 +31,4 @@ public class FourTReadOnlyServiceImpl implements FourTReadOnlyService {
 	public EntityManager getEntityManager() {
 		return fourTReadOnlyDBDAO.getEntityManager();
 	}
-
 }

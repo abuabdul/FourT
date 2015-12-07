@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.abuabdul.fourt.dao.FourTBaseDAO;
@@ -16,7 +15,7 @@ import com.abuabdul.fourt.exception.FourTServiceException;
  * @author abuabdul
  *
  */
-public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements FourTResourceDAO {
+public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long> implements FourTResourceDAO {
 
 	@Override
 	public void saveResource(Resource resource) throws FourTServiceException {
@@ -74,13 +73,6 @@ public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long>implements
 				"select r from Resource r join r.taskDetailList td where td.duration>:taskDuration", Resource.class);
 		query.setParameter("taskDuration", taskDuration);
 		return query.getResultList();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object[]> findCustomTaskResults(String nativeQuery) throws FourTServiceException {
-		Query customQuery = getEntityManager().createNativeQuery(nativeQuery);
-		return customQuery.getResultList();
 	}
 
 	@Override

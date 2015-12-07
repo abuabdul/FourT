@@ -24,9 +24,10 @@
                                     <div class="col-xs-12 col-sm-8 col-md-5">
                                         <form:select class="form-control" path="resourceName">
                                              <form:option value="">Resource Name</form:option>
-                                             <form:option value="Abubacker Siddik">Abubacker Siddik</form:option>
-                                             <form:option value="Raja">Raja</form:option>
-                                             <form:option value="Sathish">Sathish</form:option>
+                                             <form:option value="Abubacker">Abubacker</form:option>
+                                             <form:option value="Munawara">Munawara</form:option>
+                                             <form:option value="Siddik">Siddik</form:option>
+                                             <form:option value="Abu">Abu</form:option>
                                          </form:select>
                                     </div>
                                 </div>
