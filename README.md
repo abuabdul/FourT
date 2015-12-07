@@ -46,6 +46,16 @@
 
 <p>There you are!. You can start pushing in your changes to make this application better.</p>
 
+<h2 id="futurework"><a href="#futurework" class="anchor">Future Work</a></h2>
+
+<p>Planning to add employees' leave calendar. This feature will help managers to get the employees' vacation plan wholistically.</p>
+
+<ul>
+<li>Calendar to capture employees' leave plan</li>
+<li>Table to display all employees' leave plan</li>
+<li>Chart to display the overall vacation days among employees</li>
+</ul>
+
 <h2 id="contribute"><a href="#contribute" class="anchor">Contribute</a></h2>
 
 <p>You can contribute to this project.</p>
