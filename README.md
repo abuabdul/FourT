@@ -44,7 +44,7 @@
 <pre class="no-highlight">run pom.xml</pre>
 
 
-<p>There you are!. You can start checking in your changes to make this application better.</p>
+<p>There you are!. You can start pushing in your changes to make this application better.</p>
 
 <h2 id="contribute"><a href="#contribute" class="anchor">Contribute</a></h2>
 
