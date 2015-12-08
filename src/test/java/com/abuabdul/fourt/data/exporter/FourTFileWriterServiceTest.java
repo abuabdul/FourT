@@ -23,9 +23,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.support.RequestContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -45,7 +46,7 @@ public class FourTFileWriterServiceTest {
 	RequestContext context;
 
 	@Mock
-	MockHttpServletResponse response;
+	HttpServletResponse response;
 
 	@Mock
 	private FourTFileExporter<ResourceTaskDetail, TaskDetail> csvfileExporter;
