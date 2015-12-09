@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +50,7 @@ import com.abuabdul.fourt.service.FourTVetoService;
  *
  */
 @Controller
-public class FourTLandingController {
+public class FourTLandingController extends FourTAbstractController {
 
 	// Define a static logger variable so that it references the
 	// Logger instance named "FourTLandingController".
@@ -71,8 +72,9 @@ public class FourTLandingController {
 	private FourTFileWriterService<ResourceTaskDetail> fourTTextFileWriterService;
 
 	@RequestMapping(value = "/landing/fourTOverview.go")
-	public String landingPage(ModelMap model) {
+	public String landingPage(ModelMap model, HttpSession session) {
 		log.debug("Entering landingPage() in the FourTLandingController");
+		super.bootstrapRefData(session);
 		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
 		return "landingPage";
 	}
