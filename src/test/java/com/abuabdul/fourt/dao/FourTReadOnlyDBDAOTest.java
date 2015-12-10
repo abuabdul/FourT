@@ -58,7 +58,7 @@ public class FourTReadOnlyDBDAOTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test
+	@Test(groups = "integration")
 	public void testFindCustomTaskResults() throws FourTServiceException {
 		String nativeQuery = "Select * from resource";
 		List<Object[]> resultList = Lists.newArrayList();
