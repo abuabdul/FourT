@@ -59,9 +59,7 @@
 									<div class="col-xs-12 col-sm-8 col-md-5 selectContainer">
 	                                       <form:select class="form-control taskDetailStatus" path="taskDetailList[0].status">
 	                                             <form:option value="">Select</form:option>
-	                                             <form:option value="In Analysis">In Analysis</form:option>
-	                                             <form:option value="In Progress">In Progress</form:option>
-	                                             <form:option value="Completed">Completed</form:option>
+	                                             <form:options items="${taskStatusList}"></form:options>
 	                                       </form:select>
 									</div>
 									<div class="col-sm-2">

@@ -42,9 +42,7 @@
                                      <div class="col-xs-12 col-sm-8 col-md-5">
                                         <form:select class="form-control" path="status">
 	                                         <form:option value="">Task Status</form:option>
-	                                         <form:option value="In Analysis">In Analysis</form:option>
-	                                         <form:option value="In Progress">In Progress</form:option>
-	                                         <form:option value="Completed">Completed</form:option>
+	                                         <form:options items="${taskStatusList}"></form:options>
 	                                     </form:select>
                                     </div>   
                                  </div>

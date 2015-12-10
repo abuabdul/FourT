@@ -42,21 +42,32 @@ public abstract class FourTAbstractController {
 	// Logger instance named "FourTAbstractController".
 	private static final Logger log = LogManager.getLogger(FourTAbstractController.class.getName());
 
+	private static final String RESOURCE_NAME_TYPE = "TITAN_RESOURCE_NAME";
+	private static final String TASK_STATUS_TYPE = "TITAN_TASK_STATUS";
+
 	@Autowired
 	protected FourTVetoService fourTVetoService;
 
 	public void bootstrapRefData(HttpSession session, ModelMap model) throws FourTServiceException {
 		log.debug("Entering bootstrapRefData() in the FourTAbstractController");
-		if (session.getAttribute("resourceNameList") == null) {
+		if (session.getAttribute("resourceNameList") == null || session.getAttribute("taskStatusList") == null) {
 			List<String> resourceNameList = Lists.newArrayList();
+			List<String> taskStatusList = Lists.newArrayList();
 			List<RefDetail> refDetailList = fourTVetoService.findAllRefDetails(true);
 			if (!isEmpty(refDetailList)) {
 				for (RefDetail refDetail : refDetailList) {
-					resourceNameList.add(refDetail.getRefValue());
+					if (refDetail.getRefType().equalsIgnoreCase(RESOURCE_NAME_TYPE)) {
+						resourceNameList.add(refDetail.getRefValue());
+					}
+					if (refDetail.getRefType().equalsIgnoreCase(TASK_STATUS_TYPE)) {
+						taskStatusList.add(refDetail.getRefValue());
+					}
 				}
 			}
 			session.setAttribute("resourceNameList", resourceNameList);
+			session.setAttribute("taskStatusList", taskStatusList);
 		}
 		model.addAttribute("resourceNameList", session.getAttribute("resourceNameList"));
+		model.addAttribute("taskStatusList", session.getAttribute("taskStatusList"));
 	}
 }

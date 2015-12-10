@@ -75,6 +75,7 @@ public class FourTLandingControllerTest {
 	public void testLandingPage() throws Exception {
 		mockMvc.perform(post("/landing/fourTOverview.go")).andExpect(status().isOk())
 				.andExpect(model().attributeExists("resourceNameList"))
+				.andExpect(model().attributeExists("taskStatusList"))
 				.andExpect(model().attributeExists("resourceTaskTrackerForm")).andExpect(view().name("landingPage"));
 	}
 
@@ -90,6 +91,7 @@ public class FourTLandingControllerTest {
 	public void testViewTasks() throws Exception {
 		mockMvc.perform(post("/landing/fourTViewResults.go")).andExpect(status().isOk())
 				.andExpect(model().attributeExists("resourceNameList"))
+				.andExpect(model().attributeExists("taskStatusList"))
 				.andExpect(model().attributeExists("resourceTaskDetailForm"))
 				.andExpect(model().attribute("viewTasksLanding", true)).andExpect(view().name("viewTasks"));
 	}
