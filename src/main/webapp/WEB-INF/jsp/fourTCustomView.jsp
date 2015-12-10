@@ -26,6 +26,7 @@
 							<span class="text-danger"><small>** (query cannot update or insert data)</small></span></label>
 							<div class="col-xs-12 col-sm-8 col-md-5">
 								<form:textarea class="form-control customQueryDetails" rows="5" path="customQuery" placeholder="Write SQL Query to find task details" />
+								<span class="help-block">Table Details: RESOURCE, TASK_DETAIL</span>
 							</div>
 						</div>
 						<div class="form-group">
