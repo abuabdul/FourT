@@ -39,15 +39,15 @@ public class TaskDetail {
 	@Column(name = "ID")
 	private Long id;
 
-	@Column(name = "TASK_DESC", nullable = false)
+	@Column(name = "TASK_DESC", length = 200, nullable = false)
 	private String taskDesc;
 
 	@Column(name = "TASK_DURATION", nullable = false)
 	private Float duration;
 
-	@Column(name = "TASK_STATUS", nullable = false)
+	@Column(name = "TASK_STATUS", length = 50, nullable = false)
 	private String status;
-
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "RESOURCE_ID")
 	private Resource resource;
