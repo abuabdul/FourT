@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.abuabdul.fourt.dao.FourTResourceDAO;
 import com.abuabdul.fourt.dao.FourTTaskDetailDAO;
+import com.abuabdul.fourt.domain.RefDetail;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
@@ -92,14 +93,18 @@ public class FourTVetoServiceImpl implements FourTVetoService {
 	}
 
 	@Override
-	public EntityManager getEntityManager() {
-		return fourTResourceDAO.getEntityManager();
-	}
-
-	@Override
 	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
 			throws FourTServiceException {
 		return fourTTaskDetailDAO.findTaskDetailByCriteriaQuery(criteria);
 	}
 
+	@Override
+	public List<RefDetail> findAllRefDetails(boolean activeFlag) throws FourTServiceException {
+		return fourTResourceDAO.findAllRefDetails(activeFlag);
+	}
+
+	@Override
+	public EntityManager getEntityManager() {
+		return fourTResourceDAO.getEntityManager();
+	}
 }

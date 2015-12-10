@@ -24,6 +24,7 @@ import javax.persistence.TypedQuery;
 
 import com.abuabdul.fourt.dao.FourTBaseDAO;
 import com.abuabdul.fourt.dao.FourTResourceDAO;
+import com.abuabdul.fourt.domain.RefDetail;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
@@ -92,7 +93,16 @@ public class FourTResourceDAOImpl extends FourTBaseDAO<Resource, Long> implement
 	}
 
 	@Override
+	public List<RefDetail> findAllRefDetails(boolean active) throws FourTServiceException {
+		TypedQuery<RefDetail> query = getEntityManager().createQuery("from RefDetail rf where rf.active=:active",
+				RefDetail.class);
+		query.setParameter("active", active);
+		return query.getResultList();
+	}
+
+	@Override
 	public EntityManager getEntityManager() {
 		return super.getEntityManager();
 	}
+
 }

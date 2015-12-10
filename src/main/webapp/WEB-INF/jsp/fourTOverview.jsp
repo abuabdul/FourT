@@ -31,11 +31,8 @@
                                     <label for="forResourceName" class="col-sm-4 control-label">Resource</label>
                                     <div class="col-xs-12 col-sm-8 col-md-5 selectContainer">
                                         <form:select class="form-control" path="resourceName">
-                                             <form:option value="">Select</form:option>
-                                             <form:option value="Abubacker">Abubacker</form:option>
-                                             <form:option value="Munawara">Munawara</form:option>
-                                             <form:option value="Siddik">Siddik</form:option>
-                                             <form:option value="Abu">Abu</form:option>
+                                              <form:option value="">Select</form:option>  
+                							  <form:options items="${resourceNameList}"></form:options> 
                                          </form:select>
                                     </div>   
                                 </div>

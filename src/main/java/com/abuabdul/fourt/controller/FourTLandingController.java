@@ -43,7 +43,6 @@ import com.abuabdul.fourt.exception.FourTServiceException;
 import com.abuabdul.fourt.model.ResourceTask;
 import com.abuabdul.fourt.model.ResourceTaskDetail;
 import com.abuabdul.fourt.model.converter.FourTConverter;
-import com.abuabdul.fourt.service.FourTVetoService;
 
 /**
  * @author abuabdul
@@ -60,9 +59,6 @@ public class FourTLandingController extends FourTAbstractController {
 	private FourTConverter<ResourceTask, Resource, TaskDetail, ResourceTaskDetail> fourTConverter;
 
 	@Autowired
-	private FourTVetoService fourTVetoService;
-
-	@Autowired
 	private FourTResultCriteria fourTResultCriteria;
 
 	@Autowired
@@ -74,9 +70,14 @@ public class FourTLandingController extends FourTAbstractController {
 	@RequestMapping(value = "/landing/fourTOverview.go")
 	public String landingPage(ModelMap model, HttpSession session) {
 		log.debug("Entering landingPage() in the FourTLandingController");
-		super.bootstrapRefData(session);
-		model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
-		return "landingPage";
+		try {
+			super.bootstrapRefData(session, model);
+			model.addAttribute("resourceTaskTrackerForm", new ResourceTask());
+			return "landingPage";
+		} catch (FourTServiceException fse) {
+			log.debug("FourTServiceException - " + fse.getMessage());
+			throw new FourTException(fse.getMessage());
+		}
 	}
 
 	@RequestMapping(value = "/secure/resource/taskTracker.go")
@@ -96,11 +97,17 @@ public class FourTLandingController extends FourTAbstractController {
 	}
 
 	@RequestMapping(value = "/landing/fourTViewResults.go")
-	public String viewTasks(ModelMap model) {
+	public String viewTasks(ModelMap model, HttpSession session) {
 		log.debug("Entering viewTasks() in the FourTLandingController");
-		model.addAttribute("resourceTaskDetailForm", new ResourceTaskDetail());
-		model.addAttribute("viewTasksLanding", true);
-		return "viewTasks";
+		try {
+			super.bootstrapRefData(session, model);
+			model.addAttribute("resourceTaskDetailForm", new ResourceTaskDetail());
+			model.addAttribute("viewTasksLanding", true);
+			return "viewTasks";
+		} catch (FourTServiceException fse) {
+			log.debug("FourTServiceException - " + fse.getMessage());
+			throw new FourTException(fse.getMessage());
+		}
 	}
 
 	@RequestMapping(value = "/secure/resource/viewTaskDetailResults.go")

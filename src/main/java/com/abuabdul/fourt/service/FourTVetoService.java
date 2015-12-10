@@ -22,6 +22,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 
+import com.abuabdul.fourt.domain.RefDetail;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.domain.TaskDetail;
 import com.abuabdul.fourt.exception.FourTServiceException;
@@ -54,4 +55,6 @@ public interface FourTVetoService extends FourTService {
 
 	public List<TaskDetail> findTaskDetailByCriteriaQuery(CriteriaQuery<TaskDetail> criteria)
 			throws FourTServiceException;
+
+	public List<RefDetail> findAllRefDetails(boolean activeFlag) throws FourTServiceException;
 }

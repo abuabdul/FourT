@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import com.abuabdul.fourt.domain.RefDetail;
 import com.abuabdul.fourt.domain.Resource;
 import com.abuabdul.fourt.exception.FourTServiceException;
 
@@ -47,5 +48,7 @@ public interface FourTResourceDAO {
 	public List<Resource> findResourceByTaskDurationLessThan(Float taskDuration) throws FourTServiceException;
 
 	public List<Resource> findResourceByTaskDurationGreaterThan(Float taskDuration) throws FourTServiceException;
+
+	public List<RefDetail> findAllRefDetails(boolean active) throws FourTServiceException;
 
 }
