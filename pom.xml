@@ -5,7 +5,7 @@
 	<artifactId>fourt</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Fourt Maven Webapp</name>
+	<name>FourT Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
 	<repositories>
@@ -170,7 +170,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>fourt</finalName>
+		<finalName>FourT</finalName>
 		<plugins>
 			<!-- Maven Compiler plugin -->
 			<plugin>
