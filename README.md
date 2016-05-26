@@ -29,6 +29,7 @@
 <li>Java 1.7 or higher</li>
 <li>Eclipse Maven plugin</li>
 <li>HSQLDB</li>
+<li>MySQL</li>
 </ul>
 
 
